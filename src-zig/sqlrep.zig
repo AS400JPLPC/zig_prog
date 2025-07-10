@@ -235,10 +235,34 @@ sql3.cbool(defrep.hs)});
                 , .{rcd.name.data, rcd.text.data, rcd.mnmo.data, rcd.type.data,
                     rcd.width.data, rcd.scal.data, rcd.long.data,
                     rcd.hs.data} );
-             
+
+                    defrep.name.setZfld(rcd.name.data);
+                    defrep.text.setZfld(rcd.text.data);
+                    defrep.mnmo.setZfld(rcd.mnmo.data);
+                    defrep.type.setZfld(rcd.type.data);
+                    defrep.width.setDcml(rcd.width.data);
+                    defrep.scal.setDcml(rcd.scal.data);
+                    defrep.long.setDcml(rcd.long.data);
+                    defrep.hs = rcd.hs.data;               
         }
+      
+std.debug.print("{s}  {s}  {s}  {s}  {s} {s} {s}  {} \n",.{
+defrep.name.string(), defrep.text.string(), defrep.mnmo.string(), defrep.type.string(),
+defrep.width.strUInt(), defrep.scal.strUInt(), defrep.long.strUInt(),
+defrep.hs});
+
+
+
+
+        
         std.log.info("--------------------------",.{}); 
     }
+
+
+
+
+
+
 
    // Test SELECT index HS
     {
@@ -273,6 +297,12 @@ sql3.cbool(defrep.hs)});
         }
         std.log.info("--------------------------",.{}); 
     }
+
+
+
+
+
+
 
 
     zfld.deinitZfld();
