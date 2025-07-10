@@ -491,16 +491,45 @@ pub const DCMLFX = struct {
 
 
 	// It's not SQL-compliant, but it's handy for paper editions...
+	pub fn strUFlt( dst: *DCMLFX)  [] const u8 {
+		var PRINT_CODE: []const u8 = undefined;
+		const v : f128 = if(dst.val > 0) dst.val else dst.val  * -1;
+		const m: c_int = 10;
+
+		const e = @trunc(v);
+		
+		var r = v - e;
+
+		var i : i128 = 1;
+		while( i <= dst.scale) : (i += 1) {
+				r *=  m ;
+		}
+		r = @trunc(r);
+
+		PRINT_CODE = std.fmt.allocPrint(allocDcml, "{d}.{d}",.{' ',e,r}) catch unreachable;
+		return PRINT_CODE;
+	}
+
+	// It's not SQL-compliant, but it's handy for paper editions...
 	pub fn editCodeInt( dst: *DCMLFX, comptime  CODE_EDIT : []const u8 )  [] const u8 {
 		var PRINT_CODE: []const u8 = undefined;
 		const v : f128 = if(dst.val > 0) dst.val else dst.val  * -1;
 		const e = @trunc(v);
-		if ( dst.val == 0 ) PRINT_CODE = std.fmt.allocPrint(allocDcml, CODE_EDIT,.{' ',e}) catch unreachable;
+		if ( dst.val == 0) PRINT_CODE = std.fmt.allocPrint(allocDcml, CODE_EDIT,.{' ',e}) catch unreachable;
 		if ( dst.val > 0 )  PRINT_CODE = std.fmt.allocPrint(allocDcml, CODE_EDIT,.{'+',e}) catch unreachable;
 		if ( dst.val < 0 )  PRINT_CODE = std.fmt.allocPrint(allocDcml, CODE_EDIT,.{'-',e}) catch unreachable;
 		    return PRINT_CODE;
 	}
 
+
+	// It's not SQL-compliant, but it's handy for paper editions...
+	pub fn strUInt( dst: *DCMLFX )  [] const u8 {
+		var PRINT_CODE: []const u8 = undefined;
+		const v : f128 = if(dst.val > 0) dst.val else dst.val  * -1;
+		const e = @trunc(v);
+		PRINT_CODE = std.fmt.allocPrint(allocDcml,"{d}",.{e}) catch unreachable;
+		return PRINT_CODE;
+	}
 
 	
 	// function ADD
