@@ -71,14 +71,14 @@ stdout.writeAll("\x1b[3J") catch {};
     var defrep  = repertoir.initRecord();
 
     pause("start");
-    defrep.name.setZfld("AS400JPLPC");
-    defrep.prenom.setZfld("Jean-Pierre");
-    defrep.rue1.setZfld(" 01 rue du sud-ouest");
-    defrep.ville.setZfld("Narbonne");
-    defrep.pays.setZfld("France");
-    defrep.base.setDcml("126.12");
-    defrep.nbritem.setDcml("12345");
-    defrep.taxe.setDcml("1.25");
+    defrep.name.setZfld("Nameextend");
+    defrep.text.setZfld("text de la zone");
+    defrep.mnmo.setZfld("name");
+    defrep.type.setZfld("T");
+    defrep.width.setDcml("10");
+    defrep.scal.setDcml("0");
+    defrep.long.setDcml("10");
+    defrep.hs = true;
 
     
     const db = try sql3.open("sqlite", "repdb.db");
@@ -97,10 +97,13 @@ stdout.writeAll("\x1b[3J") catch {};
 	    \\ "width"  NUMERIC(4,0) NOT NULL,
 	    \\ "scal"   NUMERIC(2,0) NOT NULL,
 	    \\ "long"   NUMERIC(4,0) NOT NULL,
-	    \\ "hs"     BOOL CHECK("ok" IN (0, 1)),
+	    \\ "hs"     BOOL CHECK("hs" IN (0, 1)),
 	    \\ PRIMARY KEY("name"))
 	    , .{});
 	}
+
+
+	
     const defrepSql = struct {
         name: sql3.Text,
         text: sql3.Text,
@@ -114,39 +117,52 @@ stdout.writeAll("\x1b[3J") catch {};
 
 
 
-
-    if (try db.istable("defrep")) {
-        const insert = try db.prepare(
-            defrepSql,
-            void,
-        \\INSERT INTO defrep (name,text,mnmo,type,width,scal,long,denrg,dmaj,hs)
-        \\VALUES(:name, :text, :mnmo, :type, :width, :scal, :long, :denrg, :dmaj, :hs)
-        ,);
-        defer insert.finalize();   
-
-        try insert.exec(.{
-            .name  = sql3.text(defrep.name.string()),
-            .text  = sql3.text(defrep.text.string()),
-            .mnmo  = sql3.text(defrep.mnmo.string()),
-            .type  = sql3.text(defrep.type.string()),
-            .width = sql3.numeric(defrep.width.string()),
-            .scal  = sql3.numeric(defrep.scal.string()),
-            .long  = sql3.numeric(defrep.long.string()),
-            .hs    = sql3.boolean(defrep.hs),
-             });
-    }
+std.debug.print("{s}  {s}  {s}  {s}  {s} {s} {s}  {} {} {} \n",.{
+defrep.name.string(), defrep.text.string(), defrep.mnmo.string(), defrep.type.string(),
+defrep.width.string(), defrep.scal.string(), defrep.long.string(),
+defrep.hs,
+sql3.boolean(defrep.hs),
+sql3.cbool(defrep.hs)});
 
 
 
+    // if (try db.istable("defrep")) {
+    //     const insert = try db.prepare(
+    //         defrepSql,
+    //         void,
+    //     \\INSERT INTO defrep (name,text,mnmo,type,width,scal,long,hs)
+    //     \\VALUES(:name, :text, :mnmo, :type, :width, :scal, :long,:hs)
+    //     ,);
+    //     defer insert.finalize();   
 
-    defrep.ttc.setZeros();
-    defrep.ok = false;
-   // UPDATE  where name ="AS400JPLPC"
-    {
-        // for test value ttc big decimal check finance Force quoted values for DCML  
+    //     try insert.exec(.{
+    //         .name  = sql3.text(defrep.name.string()),
+    //         .text  = sql3.text(defrep.text.string()),
+    //         .mnmo  = sql3.text(defrep.mnmo.string()),
+    //         .type  = sql3.text(defrep.type.string()),
+    //         .width = sql3.numeric(defrep.width.string()),
+    //         .scal  = sql3.numeric(defrep.scal.string()),
+    //         .long  = sql3.numeric(defrep.long.string()),
+    //         .hs    = sql3.boolean(defrep.hs),
+    //          });
+    // }
+
+
+
+
+   // defrep.text.setZeros();
+    defrep.hs = false;
+       {
         const sqlUpdate : []const u8 = std.fmt.allocPrint(allocSQL,
-            "UPDATE Zoned SET (ttc,ok)=(\"{s}\",{d}) WHERE name='{s}'",
-                .{defrep.ttc.string(),sql3.cbool(defrep.ok),defrep.name.string(),})
+            \\UPDATE defrep SET
+            \\text = '{s}', mnmo = '{s}', type = '{s}',
+            \\width = {s}, scal = {s}, long = {s}, hs = {d} 
+            \\WHERE name='{s}'
+            ,   .{
+                    defrep.text.string(), defrep.mnmo.string(), defrep.type.string(), 
+                    defrep.width.string(), defrep.scal.string(), defrep.long.string(), sql3.cbool(defrep.hs),
+                    defrep.name.string()
+                ,})
                 catch {@panic("init Update invalide");};
         defer allocSQL.free(sqlUpdate);
         pause(sqlUpdate);
@@ -155,7 +171,7 @@ stdout.writeAll("\x1b[3J") catch {};
 
 
 
-    // Test SELECT
+    //Test SELECT full
     {
 
          const select = try db.prepare(
@@ -171,17 +187,17 @@ stdout.writeAll("\x1b[3J") catch {};
 
         while (try select.step()) |rcd| {
             std.log.info(
-                \\id:{d}
-                \\name:{s} prenom: {s}
-                \\rue1:{s} rue2:{s}
-                \\ville:{s} pays:{s}
-                \\base:{s} taxe:{s} htx:{s} ttc:{s} nbritem:{s}
-                \\date:{s}
-                \\ok:{}
-                , .{rcd.id orelse 0,
-                    rcd.name.data, rcd.prenom.data, rcd.rue1.data, rcd.rue2.data, rcd.ville.data, rcd.pays.data,
-                    rcd.base.data, rcd.taxe.data, rcd.htx.data, rcd.ttc.data, rcd.nbritem.data,
-                    rcd.date.data , rcd.ok.data} );
+                \\name:{s}
+                \\text:{s}
+                \\mnmo:{s}
+                \\type:{s}
+                \\width:{s}
+                \\scal:{s}
+                \\long:{s}
+                \\hs:{}
+                , .{rcd.name.data, rcd.text.data, rcd.mnmo.data, rcd.type.data,
+                    rcd.width.data, rcd.scal.data, rcd.long.data,
+                    rcd.hs.data} );
 
              std.log.info("--------------------------",.{});       
         }
@@ -190,58 +206,73 @@ stdout.writeAll("\x1b[3J") catch {};
     }
 
 
-    defrep.ttc.rate(defrep.base,defrep.nbritem,defrep.taxe);
-    defrep.ok = true;
-    defrep.date.dateOff();
-
-    // UPDATEd id = 1
-    {
-        // for test value ttc big decimal check finance Force quoted values for DCML  
-   defrep.ttc.setDcml("912345678901234567890123456789.0123");
-        const sqlUpdate : []const u8 = std.fmt.allocPrint(allocSQL,
-            "UPDATE Zoned SET (name,ttc,date,ok)=('{s}', \"{s}\", \"{s}\", {d}) WHERE id='{d}'",
-                .{"COUCOU",defrep.ttc.string(),defrep.date.string(),sql3.cbool(defrep.ok),1,})
-                catch {@panic("init Update invalide");};
-        defer allocSQL.free(sqlUpdate);
-        pause(sqlUpdate);
-        try db.exec(sqlUpdate,.{});
-
-        std.log.info("--------------------------",.{});
-    }
-
-   // Test SELECT
+   // Test SELECT index name
     {
 
          const select = try db.prepare(
-            struct {key : i32},
+            struct {key : sql3.Text},
             defrepSql,
-            "SELECT * FROM Zoned WHERE id=:key",
+            "SELECT * FROM defrep WHERE name=:key",
         );
         defer select.finalize();
-       // Iterate again, full
+        // Iterate again, name
+        defrep.name.setZfld("toto");
+        try select.bind(.{.key = sql3.text(defrep.name.string())});
 
-        try select.bind(.{.key = 1});
+        //try select.bind(.{.key = sql3.text("tata")});
         defer select.reset();
 
         while (try select.step()) |rcd| {
             std.log.info(
-                \\id:{d}
-                \\name:{s} prenom: {s}
-                \\rue1:{s} rue2:{s}
-                \\ville:{s} pays:{s}
-                \\base:{s} taxe:{s} htx:{s} ttc:{s} nbritem:{s}
-                \\date:{s}
-                \\ok:{}
-                , .{rcd.id orelse 0,
-                    rcd.name.data, rcd.prenom.data, rcd.rue1.data, rcd.rue2.data, rcd.ville.data, rcd.pays.data,
-                    rcd.base.data, rcd.taxe.data, rcd.htx.data, rcd.ttc.data, rcd.nbritem.data,
-                    rcd.date.data , rcd.ok.data} );
+                \\name:{s}
+                \\text:{s}
+                \\mnmo:{s}
+                \\type:{s}
+                \\width:{s}
+                \\scal:{s}
+                \\long:{s}
+                \\hs:{}
+                , .{rcd.name.data, rcd.text.data, rcd.mnmo.data, rcd.type.data,
+                    rcd.width.data, rcd.scal.data, rcd.long.data,
+                    rcd.hs.data} );
              
         }
         std.log.info("--------------------------",.{}); 
     }
 
+   // Test SELECT index HS
+    {
 
+         const select = try db.prepare(
+            struct {key : i32},
+            defrepSql,
+            "SELECT * FROM defrep WHERE hs=:key",
+        );
+        defer select.finalize();
+        // Iterate again, HS
+        defrep.hs = true;
+        try select.bind(.{.key = sql3.cbool(defrep.hs)});
+
+        //try select.bind(.{.key = sql3.text("tata")});
+        defer select.reset();
+
+        while (try select.step()) |rcd| {
+            std.log.info(
+                \\name:{s}
+                \\text:{s}
+                \\mnmo:{s}
+                \\type:{s}
+                \\width:{s}
+                \\scal:{s}
+                \\long:{s}
+                \\hs:{}
+                , .{rcd.name.data, rcd.text.data, rcd.mnmo.data, rcd.type.data,
+                    rcd.width.data, rcd.scal.data, rcd.long.data,
+                    rcd.hs.data} );
+             
+        }
+        std.log.info("--------------------------",.{}); 
+    }
 
 
     zfld.deinitZfld();

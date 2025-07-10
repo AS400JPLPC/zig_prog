@@ -1,0 +1,2 @@
+UPDATE defrep SET (text, mnmo, type, width, scal, long, hs) = ('text de la zone', 'name', 'T', 10, 0, 10, 0 ) WHERE name='Nameextend')
+;
