@@ -724,7 +724,6 @@ pub const kbd = enum {
         var Event: Keyboard = Keyboard{ .Key = kbd.none, .Char = "" };
 
         // TODO: Check buffer size
-        // var keybuf: [16] u8 =  [_]u8{0} ** 16;
         var keybuf : [16] u8 = @splat(0);
 
         flushIO();

@@ -2851,6 +2851,7 @@ pub const    fld = struct {
                                 }
                             },
                             else => {
+                                //check field.len > 0 and regexLen > 0 execute regex
                                 if (!vfld.requier and utl.trimStr(utl.listToStr(e_FIELD)).len == 0 ) {
                                     continue;
                                 }                                
