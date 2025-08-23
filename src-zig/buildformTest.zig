@@ -13,6 +13,7 @@ pub fn build(b: *std.Build) void {
 
 
     // ===========================================================
+    const alloc = b.dependency("libtui", .{}).module("alloc");
     const cursed = b.dependency("libtui", .{}).module("cursed");
     const utils  = b.dependency("libtui", .{}).module("utils");
     const forms  = b.dependency("libtui", .{}).module("forms");
@@ -26,12 +27,16 @@ pub fn build(b: *std.Build) void {
 
     const Prog = b.addExecutable(.{
     .name = "formTest",
-    .root_source_file = b.path( "./formTest.zig" ),
-    .target = target,
-    .optimize = optimize,
+    .root_module = b.createModule(.{
+        .root_source_file = b.path( "./formTest.zig" ),
+        .target = target,
+        .optimize = optimize,
+        }),
     });
 
-   
+
+    Prog.root_module.addImport("alloc", alloc);
+    
     Prog.root_module.addImport("cursed", cursed);
 
     Prog.root_module.addImport("utils", utils);

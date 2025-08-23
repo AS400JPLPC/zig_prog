@@ -9,6 +9,8 @@ const std = @import("std");
 const term = @import("cursed");
 // keyboard
 const kbd = @import("cursed").kbd;
+// alloc
+const mem = @import("alloc");
 
 // cadre
 const cdr = @import("forms").CADRE;
@@ -51,12 +53,10 @@ const reg = @import("mvzr");
 
 
 // arena allocator 
-var arenaProg = std.heap.ArenaAllocator.init(std.heap.page_allocator);
-var  alloc = arenaProg.allocator();
-fn deinitForms() void {
-	arenaProg.deinit();
-	arenaProg = std.heap.ArenaAllocator.init(std.heap.page_allocator);
-	alloc = arenaProg.allocator();
+var arenaPgm = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+var  allocPgm = arenaPgm .allocator();
+fn deinitPgm () void {
+	arenaPgm .reset(.free_all);
 }
 
 
@@ -76,28 +76,28 @@ pub fn Panel_DEFREP() *pnl.PANEL{
 			"Def.REPERTOIRE");
 
 			//----------------------
-			Panel.button.append(btn.newButton(kbd.F1,true,false,"Help")) catch unreachable ;
-			Panel.button.append(btn.newButton(kbd.F3,true,false,"Exit")) catch unreachable ;
-			Panel.button.append(btn.newButton(kbd.F7,true,false,"Display GRID")) catch unreachable ;
-			Panel.button.append(btn.newButton(kbd.F9,true,false,"Enrg.")) catch unreachable ;
-			Panel.button.append(btn.newButton(kbd.F11,true,false,"Update")) catch unreachable ;
-			Panel.button.append(btn.newButton(kbd.F12,true,false,"Return")) catch unreachable ;
-			Panel.button.append(btn.newButton(kbd.F23,true,false,"Delette")) catch unreachable ;
+			Panel.button.append(mem.allocTui,btn.newButton(kbd.F1,true,false,"Help")) catch unreachable ;
+			Panel.button.append(mem.allocTui,btn.newButton(kbd.F3,true,false,"Exit")) catch unreachable ;
+			Panel.button.append(mem.allocTui,btn.newButton(kbd.F7,true,false,"Display GRID")) catch unreachable ;
+			Panel.button.append(mem.allocTui,btn.newButton(kbd.F9,true,false,"Enrg.")) catch unreachable ;
+			Panel.button.append(mem.allocTui,btn.newButton(kbd.F11,true,false,"Update")) catch unreachable ;
+			Panel.button.append(mem.allocTui,btn.newButton(kbd.F12,true,false,"Return")) catch unreachable ;
+			Panel.button.append(mem.allocTui,btn.newButton(kbd.F23,true,false,"Delette")) catch unreachable ;
 
 			//----------------------
-			Panel.label.append(lbl.newLabel("L33",3,4,"Name Extended")) catch unreachable ;
-			Panel.label.append(lbl.newLabel("L320",3,20,"Text")) catch unreachable ;
-			Panel.label.append(lbl.newLabel("L371",3,71,"MNEMO")) catch unreachable ;
-			Panel.label.append(lbl.newLabel("L378",3,78,"T")) catch unreachable ;
-			Panel.label.append(lbl.newLabel("L380",3,80,"Width")) catch unreachable ;
-			Panel.label.append(lbl.newLabel("L386",3,86,"Scal")) catch unreachable ;
-			Panel.label.append(lbl.newLabel("L391",3,91,"Long")) catch unreachable ;
-			Panel.label.append(lbl.newLabel("L396",3,96,"Hs")) catch unreachable ;
+			Panel.label.append(mem.allocTui,lbl.newLabel("L33",3,4,"Name Extended")) catch unreachable ;
+			Panel.label.append(mem.allocTui,lbl.newLabel("L320",3,20,"Text")) catch unreachable ;
+			Panel.label.append(mem.allocTui,lbl.newLabel("L371",3,71,"MNEMO")) catch unreachable ;
+			Panel.label.append(mem.allocTui,lbl.newLabel("L378",3,78,"T")) catch unreachable ;
+			Panel.label.append(mem.allocTui,lbl.newLabel("L380",3,80,"Width")) catch unreachable ;
+			Panel.label.append(mem.allocTui,lbl.newLabel("L386",3,86,"Scal")) catch unreachable ;
+			Panel.label.append(mem.allocTui,lbl.newLabel("L391",3,91,"Long")) catch unreachable ;
+			Panel.label.append(mem.allocTui,lbl.newLabel("L396",3,96,"Hs")) catch unreachable ;
 
 			//----------------------
 
 
-			Panel.field.append(fld.newFieldTextFree("NAME",4,4,15,
+			Panel.field.append(mem.allocTui,fld.newFieldTextFree("NAME",4,4,15,
 			"",
 			false,
 			"Le nom est obligantoire",
@@ -106,7 +106,7 @@ pub fn Panel_DEFREP() *pnl.PANEL{
 			fld.setTask(Panel,fld.getIndex(Panel,"NAME") catch unreachable,"TctlName") catch unreachable ; 
 
 
-			Panel.field.append(fld.newFieldTextFree("TEXT",4,20,50,
+			Panel.field.append(mem.allocTui,fld.newFieldTextFree("TEXT",4,20,50,
 			"",
 			false,
 			"Text Invalide",
@@ -115,7 +115,7 @@ pub fn Panel_DEFREP() *pnl.PANEL{
 			fld.setTask(Panel,fld.getIndex(Panel,"TEXT") catch unreachable,"TctlText") catch unreachable ; 
 
 
-			Panel.field.append(fld.newFieldAlphaNumericUpper("MNEMO",4,71,6,
+			Panel.field.append(mem.allocTui,fld.newFieldAlphaNumericUpper("MNEMO",4,71,6,
 			"",
 			false,
 			"Mnemonic onmigatoire",
@@ -124,7 +124,7 @@ pub fn Panel_DEFREP() *pnl.PANEL{
 			fld.setTask(Panel,fld.getIndex(Panel,"MNEMO") catch unreachable,"TctlMnemo") catch unreachable ; 
 
 
-			Panel.field.append(fld.newFieldFunc("TYPE",4,78,1,
+			Panel.field.append(mem.allocTui,fld.newFieldFunc("TYPE",4,78,1,
 			"",
 			false,
 			"Ctype",
@@ -133,7 +133,7 @@ pub fn Panel_DEFREP() *pnl.PANEL{
 			fld.setTask(Panel,fld.getIndex(Panel,"TYPE") catch unreachable,"TctrlType") catch unreachable ; 
 
 
-			Panel.field.append(fld.newFieldUDigit("WIDTH",4,82,3,
+			Panel.field.append(mem.allocTui,fld.newFieldUDigit("WIDTH",4,82,3,
 			"",
 			false,
 			"Width Obligatoire",
@@ -142,7 +142,7 @@ pub fn Panel_DEFREP() *pnl.PANEL{
 			fld.setTask(Panel,fld.getIndex(Panel,"WIDTH") catch unreachable,"TctrlWidth") catch unreachable ; 
 
 
-			Panel.field.append(fld.newFieldUDigit("SCAL",4,87,3,
+			Panel.field.append(mem.allocTui,fld.newFieldUDigit("SCAL",4,87,3,
 			"",
 			false,
 			"Scal Obligatoire",
@@ -151,7 +151,7 @@ pub fn Panel_DEFREP() *pnl.PANEL{
 			fld.setTask(Panel,fld.getIndex(Panel,"SCAL") catch unreachable,"TctrlScal") catch unreachable ; 
 
 
-			Panel.field.append(fld.newFieldUDigit("LONG",4,92,3,
+			Panel.field.append(mem.allocTui,fld.newFieldUDigit("LONG",4,92,3,
 			"",
 			false,
 			"Longueur de la zone extended Invalide",
@@ -161,7 +161,7 @@ pub fn Panel_DEFREP() *pnl.PANEL{
 			fld.setTask(Panel,fld.getIndex(Panel,"LONG") catch unreachable,"TcrtlLong") catch unreachable ; 
 
 
-			Panel.field.append(fld.newFieldSwitch("hs",4,96,false,
+			Panel.field.append(mem.allocTui,fld.newFieldSwitch("hs",4,96,false,
 			".",
 			"Hors service")) catch unreachable ;
 
@@ -198,7 +198,7 @@ pub fn Panel_DEFREP() *pnl.PANEL{
 		);
 
 		defer grd.freeGrid(Xcombo);
-		defer grd.allocatorGrid.destroy(Xcombo);
+		defer mem.allocTui.destroy(Xcombo);
 
 		grd.newCell(Xcombo,"Type",4, grd.REFTYP.TEXT_FREE, term.ForegroundColor.fgGreen);
 		grd.newCell(Xcombo,"Label",10, grd.REFTYP.TEXT_FREE, term.ForegroundColor.fgYellow);
@@ -211,7 +211,7 @@ pub fn Panel_DEFREP() *pnl.PANEL{
 
 		// Interrogation
 		var Gkey :grd.GridSelect = undefined ;
-		defer Gkey.Buf.deinit();
+		defer Gkey.Buf.deinit(mem.allocTui);
 
 		Gkey =grd.ioCombo(Xcombo,cellPos);
 		pnl.rstPanel(grd.GRID,Xcombo, vpnl);
@@ -473,6 +473,7 @@ var Tkey : term.Keyboard = undefined ;
 		}
 
 		if (Tkey.Key == kbd.F3) break; // end work
+		if (Tkey.Key == kbd.F12) break; // end work
 	}
 
 	return Tkey;
@@ -514,7 +515,7 @@ var Tkey : term.Keyboard = undefined ;
 
 		// Interrogation
 		var Gkey :grd.GridSelect = undefined ;
-		defer Gkey.Buf.deinit();
+		defer Gkey.Buf.deinit(mem.allocTui);
 
 		while (true ){
 			Gkey =grd.ioGrid(SFLDX ,true);

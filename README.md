@@ -17,3 +17,5 @@ Ps: it's not finished yet, the SQL module has yet to be inserted, and the intera
 
 → 2025-07-08 15:00 : update sqlrep  <BR/>
 
+→ 2025-08-22 04:00 : update zig 0.15.1  /defrep.zig   SQLite modeling study <BR/>
+

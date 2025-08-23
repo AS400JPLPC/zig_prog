@@ -81,8 +81,8 @@ stdout.writeAll("\x1b[3J") catch {};
     defrep.hs = true;
 
     
-    const db = try sql3.open("sqlite", "repdb.db");
-    defer db.close();
+    const db = try sql3.open("sqlite", "repdb.db", sql3.Mode.ReadWrite);
+    // defer db.close();
 
 // To work in extended digital (DCML) put the TEXT fields
     if (! try db.istable("defrep")) {
@@ -168,13 +168,18 @@ sql3.cbool(defrep.hs)});
         pause(sqlUpdate);
         try db.exec(sqlUpdate,.{});
     }
+    
+db.close();
 
 
+
+    const dbr = try sql3.open("sqlite", "repdb.db", sql3.Mode.ReadOnly);
+    defer dbr.close();
 
     //Test SELECT full
     {
 
-         const select = try db.prepare(
+         const select = try dbr.prepare(
             struct {},
             defrepSql,
             "SELECT * FROM defrep ",
@@ -209,7 +214,7 @@ sql3.cbool(defrep.hs)});
    // Test SELECT index name
     {
 
-         const select = try db.prepare(
+         const select = try dbr.prepare(
             struct {key : sql3.Text},
             defrepSql,
             "SELECT * FROM defrep WHERE name=:key",
@@ -261,13 +266,10 @@ defrep.hs});
 
 
 
-
-
-
    // Test SELECT index HS
     {
 
-         const select = try db.prepare(
+         const select = try dbr.prepare(
             struct {key : i32},
             defrepSql,
             "SELECT * FROM defrep WHERE hs=:key",

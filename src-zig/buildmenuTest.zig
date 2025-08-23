@@ -22,9 +22,11 @@ pub fn build(b: *std.Build) void {
 
     const Prog = b.addExecutable(.{
     .name = "menuTest",
-    .root_source_file = b.path( "./menuTest.zig" ),
-    .target = target,
-    .optimize = optimize,
+    .root_module = b.createModule(.{
+        .root_source_file = b.path( "./menuTest.zig" ),
+        .target = target,
+        .optimize = optimize,
+        }),
     });
 
 
