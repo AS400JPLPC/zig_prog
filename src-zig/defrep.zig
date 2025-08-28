@@ -12,6 +12,8 @@ pub const Idm = @import("datetime").DATE.Idiom;
 pub const Tmz = @import("timezones");
 
 const sql3 = @import("sqlite");
+const builtin = @import("builtin");
+
 
 const allocREP = std.heap.page_allocator;
 
@@ -201,7 +203,49 @@ pub fn lgqLIKE(ldbr : sql3.Database, like : []const u8 )  !void{
 
 }
 
-   
+
+pub fn exist(db : sql3.Database, name :[]const u8 )  bool {
+    const Result = struct { count: usize };
+
+    var sqlwrk : []const u8 = undefined;
+    if ( std.mem.eql( u8, name ,"")) return false;
+     sqlwrk = std.fmt. allocPrint(allocREP,
+         "SELECT count(*) as count FROM defrep  WHERE name='{s}'; ",.{name}) catch unreachable;
+    defer allocREP.free(sqlwrk);
+
+    WriteAll(sqlwrk);
+    
+         const select = db.prepare(
+            struct {},
+            Result,
+            sqlwrk,
+        ) catch |err| {
+                const s = @src();
+                    @panic( std.fmt.allocPrint(allocREP,
+                    "\n\n\r file:{s} line:{d} column:{d} func:{s}() name:{s}  err:{}\n\r"
+                    ,.{s.file, s.line, s.column,s.fn_name,name,err})
+                        catch unreachable
+                    );
+                };
+        defer select.finalize();
+        select.bind(.{}) catch unreachable;
+        defer select.reset();
+        while (select.step() catch unreachable) |rcd| {
+            std.log.info(
+                \\crow_exist:{d}
+                , .{rcd.count});
+            
+            std.log.info("--------------------------",.{});       
+        }
+
+        while (select.step() catch unreachable) |rcd| {
+                   if ( rcd.count == 1 ) return true ;
+        }
+        return false;
+}
+
+
+
 pub fn main() !void {
 WriteAll("\x1b[2J");
 WriteAll("\x1b[3J");
@@ -246,14 +290,14 @@ defrep.hs,
 sql3.boolean(defrep.hs),
 sql3.cbool(defrep.hs)});
 
-
-    insert(db) catch |err| {
-		const s = @src();
-        @panic(std.fmt.allocPrint(allocREP,
-        "\n\n\r file:{s} line:{d} column:{d} func:{s}  err:{})\n\r"
-        ,.{s.file, s.line, s.column,s.fn_name,err})
-        		catch unreachable);
-    };
+    if (!exist(db ,defrep.name.string()))
+        insert(db) catch |err| {
+    		const s = @src();
+            @panic(std.fmt.allocPrint(allocREP,
+            "\n\n\r file:{s} line:{d} column:{d} func:{s}  err:{})\n\r"
+            ,.{s.file, s.line, s.column,s.fn_name,err})
+            catch unreachable);
+        };
 
 
 
