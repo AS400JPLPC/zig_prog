@@ -18,7 +18,7 @@ f_cls() {
 reset > /dev/null
 	echo -en '\033[1;1H'
 	#echo -en '\033]11;#000000\007'
-	#echo -en '\033]10;#FFFFFF\007'	 
+	#echo -en '\033]10;#FFFFFF\007'
 }
 
 f_pause(){
@@ -36,21 +36,21 @@ f_dsplyPos(){ #commande de positionnement	lines + coln + couleur + text
 	echo -en '\033['$lig';'$col'f'$3$4
 
 }
-f_readPos() {	#commande de positionnement	lines + coln + text 
+f_readPos() {	#commande de positionnement	lines + coln + text
 	echo -en '\033[0;0m'
 	let lig=$1
 	let col=$2
 	let colR=$2+${#3}+1  # si on doit coller faire  $2+${#3}
-	echo -en '\033['$lig';'$col'f'$fdVert$faGras$fcBlanc$3 
-	echo -en '\033[0;0m' 
-	tput cnorm	# curseur visible         			
+	echo -en '\033['$lig';'$col'f'$fdVert$faGras$fcBlanc$3
+	echo -en '\033[0;0m'
+	tput cnorm	# curseur visible
  	echo -en '\033['$lig';'$colR'f'$faGras$fcGreen
-	read   
+	read
 	tput civis 	# curseur invisible
-	echo -en '\033[0;0m'			  
+	echo -en '\033[0;0m'
 }
 
-# resize 
+# resize
 printf '\e[8;'35';'80't'
 
 envCPP="1"
@@ -60,7 +60,7 @@ LIBPROJECT="/home/soleil/Zprog/"
 LIBTUI="/home/soleil/Zprog/libtui/"
 LIBZND="/home/soleil/Zprog/libznd/"
 LIBSQL="/home/soleil/Zprog/libsql/"
-
+LIBDEF="/home/soleil/Zprog/libdef/"
 choix=""
 
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -78,7 +78,9 @@ do
 
 	f_dsplyPos 10  20 $faGras$fcRouge' 10'; f_dsplyPos 10  24 $faGras$fcGreen 'menuTest'
 	f_dsplyPos 11  20 $faGras$fcRouge' 11'; f_dsplyPos 11  24 $faGras$fcGreen 'formTest'
-	f_dsplyPos 12  20 $faGras$fcRouge' 12'; f_dsplyPos 12  24 $faGras$fcGreen 'Test'
+	f_dsplyPos 12  20 $faGras$fcRouge' 12'; f_dsplyPos 12  24 $faGras$fcGreen 'sqlrep'
+  f_dsplyPos 13  20 $faGras$fcRouge' 20'; f_dsplyPos 13  24 $faGras$fcGreen 'defrep'
+  f_dsplyPos 15  20 $faGras$fcRouge' 25'; f_dsplyPos 15  24 $faGras$fcGreen 'test'
 
 	f_dsplyPos 16  24 $faGras$fcJaune '----------------------------------------'
 
@@ -86,7 +88,7 @@ do
 
 	f_dsplyPos 19  20 $faGras$fcRouge'44.'; f_dsplyPos 19  24 $faGras$fcCyan  'enScript Printer'
 
-    f_dsplyPos 21  20 $faGras$fcRouge'50/51/52'; f_dsplyPos 21  34 $faGras$fcCyan  'Edit my libtui/libznd/libsql'
+  f_dsplyPos 21  20 $faGras$fcRouge'50/51/52/53'; f_dsplyPos 21 34 $faGras$fcCyan 'Edit my libtui/libznd/libsql/libdef'
 
 
 	f_dsplyPos 23  20 $faGras$fcRouge'60.'; f_dsplyPos 23  24 $faGras$fcCyan  'Edit my project'
@@ -101,7 +103,7 @@ do
 
 	f_dsplyPos 32  24 $faGras$fcBleu '----------------------------------------'
 	f_readPos  34  20  'Votre choix  :'; choix=$REPLY;
-	
+
 	# Recherche de caractères non numériques dans les arguments.
 	if echo $choix | tr -d [:blank:] | tr -d [:digit:] | grep . &> /dev/null; then
 		f_readPos 34 70  'erreur de saisie Enter'
@@ -127,8 +129,18 @@ do
 		;;
 #test
 		12)
+			/home/soleil/.Terminal/dispatch.sh $envZIG $LIBPROJECT   "sqlrep"
+		;;
+
+#test
+		20)
+			/home/soleil/.Terminal/dispatch.sh $envZIG $LIBPROJECT   "defrep"
+		;;
+#test
+		25)
 			/home/soleil/.Terminal/dispatch.sh $envZIG $LIBPROJECT   "Test"
 		;;
+
 
 #debug
 		33)
@@ -147,18 +159,26 @@ do
 			#break
 		;;
 #libzone
-        51)
-            /home/soleil/.Terminal/myProject.sh  $PROJECT $LIBZND
-            #sleep 2
-            #break
-        ;;
+    51)
+      /home/soleil/.Terminal/myProject.sh  $PROJECT $LIBZND
+      #sleep 2
+      #break
+    ;;
 
 #libsql
-        52)
-            /home/soleil/.Terminal/myProject.sh  $PROJECT $LIBSQL
-            #sleep 2
-            #break
-        ;;
+    52)
+      /home/soleil/.Terminal/myProject.sh  $PROJECT $LIBSQL
+      #sleep 2
+      #break
+    ;;
+
+#libdef
+    53)
+      /home/soleil/.Terminal/myProject.sh  $PROJECT $LIBDEF
+      #sleep 2
+      #break
+    ;;
+       
 #project
 		60)
 			/home/soleil/.Terminal/myProject.sh  $PROJECT $LIBPROJECT"src-zig"
@@ -173,7 +193,7 @@ do
 			#break
 		;;
 
-#?clear 
+#?clear
 		77)
 			> $HOME/.cache/helix/helix.log
 		;;
@@ -181,7 +201,7 @@ do
 #console
 
 		88)
-			/home/soleil/.Terminal/console.sh 
+			/home/soleil/.Terminal/console.sh
 		;;
 
 
@@ -191,7 +211,7 @@ do
 			break
 		;;
 
-	esac 
+	esac
 	fi # fintest option
 
 printf '\e[8;'35';'80't'
