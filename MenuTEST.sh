@@ -78,7 +78,6 @@ do
 
 	f_dsplyPos 10  20 $faGras$fcRouge' 10'; f_dsplyPos 10  24 $faGras$fcGreen 'menuTest'
 	f_dsplyPos 11  20 $faGras$fcRouge' 11'; f_dsplyPos 11  24 $faGras$fcGreen 'formTest'
-	f_dsplyPos 12  20 $faGras$fcRouge' 12'; f_dsplyPos 12  24 $faGras$fcGreen 'sqlrep'
   f_dsplyPos 13  20 $faGras$fcRouge' 20'; f_dsplyPos 13  24 $faGras$fcGreen 'defrep'
   f_dsplyPos 15  20 $faGras$fcRouge' 25'; f_dsplyPos 15  24 $faGras$fcGreen 'test'
 
@@ -126,10 +125,6 @@ do
 #formsrc
 		11)
 			/home/soleil/.Terminal/dispatch.sh $envZIG $LIBPROJECT   "formTest"
-		;;
-#test
-		12)
-			/home/soleil/.Terminal/dispatch.sh $envZIG $LIBPROJECT   "sqlrep"
 		;;
 
 #test
