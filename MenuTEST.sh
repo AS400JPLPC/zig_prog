@@ -60,7 +60,7 @@ LIBPROJECT="/home/soleil/Zprog/"
 LIBTUI="/home/soleil/Zprog/libtui/"
 LIBZND="/home/soleil/Zprog/libznd/"
 LIBSQL="/home/soleil/Zprog/libsql/"
-LIBDEF="/home/soleil/Zprog/libdef/"
+LIBDEF="/home/soleil/Zprog/librep/"
 choix=""
 
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -70,16 +70,16 @@ do
 	f_cls
 	f_dsplyPos  1  24 $faGras$fcJaune 'Project: '$faGras$fcCyan$PROJECT
 
-	f_dsplyPos  3  24 $faGras$fcJaune '------------compile cpp-----------------'
+	f_dsplyPos  2  24 $faGras$fcJaune '------------compile cpp-----------------'
 
-	f_dsplyPos  5  20 $faGras$fcRouge ' 1.'; f_dsplyPos  5  24 $faGras$fcGreen 'Prog'
+	f_dsplyPos  3  20 $faGras$fcRouge ' 1.'; f_dsplyPos  3  24 $faGras$fcGreen 'Prog'
 
-	f_dsplyPos  7  24 $faGras$fcJaune '------------compile Zig-----------------'
+	f_dsplyPos  4  24 $faGras$fcJaune '------------compile Zig-----------------'
 
-	f_dsplyPos 10  20 $faGras$fcRouge' 10'; f_dsplyPos 10  24 $faGras$fcGreen 'menuTest'
-	f_dsplyPos 11  20 $faGras$fcRouge' 11'; f_dsplyPos 11  24 $faGras$fcGreen 'formTest'
-  f_dsplyPos 13  20 $faGras$fcRouge' 20'; f_dsplyPos 13  24 $faGras$fcGreen 'defrep'
-  f_dsplyPos 15  20 $faGras$fcRouge' 25'; f_dsplyPos 15  24 $faGras$fcGreen 'test'
+	f_dsplyPos  5  20 $faGras$fcRouge' 10'; f_dsplyPos  5  24 $faGras$fcGreen 'menuTest'
+    f_dsplyPos  6  20 $faGras$fcRouge' 12'; f_dsplyPos  6  24 $faGras$fcGreen 'defrep'
+    f_dsplyPos 14  20 $faGras$fcRouge' 25'; f_dsplyPos 14  24 $faGras$fcGreen 'convDB'
+	f_dsplyPos 15  20 $faGras$fcRouge' 26'; f_dsplyPos 15  24 $faGras$fcGreen 'testrep'
 
 	f_dsplyPos 16  24 $faGras$fcJaune '----------------------------------------'
 
@@ -122,20 +122,19 @@ do
 			/home/soleil/.Terminal/dispatch.sh $envZIG $LIBPROJECT   "menuTest"
 		;;
 
-#formsrc
-		11)
-			/home/soleil/.Terminal/dispatch.sh $envZIG $LIBPROJECT   "formTest"
-		;;
-
 #test
-		20)
+		12)
 			/home/soleil/.Terminal/dispatch.sh $envZIG $LIBPROJECT   "defrep"
 		;;
+
 #test
 		25)
-			/home/soleil/.Terminal/dispatch.sh $envZIG $LIBPROJECT   "Test"
+			/home/soleil/.Terminal/dispatch.sh $envZIG $LIBPROJECT   "convDB"
 		;;
-
+#test
+		26)
+			/home/soleil/.Terminal/dispatch.sh $envZIG $LIBPROJECT   "testrep"
+		;;
 
 #debug
 		33)
@@ -173,7 +172,7 @@ do
       #sleep 2
       #break
     ;;
-       
+
 #project
 		60)
 			/home/soleil/.Terminal/myProject.sh  $PROJECT $LIBPROJECT"src-zig"

@@ -69,7 +69,7 @@ pub fn main() !void {
     // definiton -> defrep
     _ = tdf.createTable(db);
 
-    tdf.defrep.name.setZfld("Nameextend");
+    tdf.defrep.refname.setZfld("Nameextend");
     tdf.defrep.text.setZfld("text de la zone");
     tdf.defrep.mnmo.setZfld("name");
     tdf.defrep.type.setZfld("T");
@@ -78,7 +78,7 @@ pub fn main() !void {
     tdf.defrep.long.setDcml("10");
     tdf.defrep.hs = false;
 
-    Print("\r\n{s}  {s}  {s}  {s}  {s} {s} {s}  {} {} {} \n", .{ tdf.defrep.name.string(), tdf.defrep.text.string(),
+    Print("\r\n{s}  {s}  {s}  {s}  {s} {s} {s}  {} {} {} \n", .{ tdf.defrep.refname.string(), tdf.defrep.text.string(),
         tdf.defrep.mnmo.string(), tdf.defrep.type.string(), tdf.defrep.width.string(), tdf.defrep.scal.string(),
         tdf.defrep.long.string(), tdf.defrep.hs, sql3.boolean(tdf.defrep.hs), sql3.cbool(tdf.defrep.hs) });
 
@@ -87,23 +87,27 @@ pub fn main() !void {
     Pause("delete");
 
     _ = tdf.removeTable(db);
+  Pause("removeTable");
 
-    _ = tdf.createTable(db);    
+    _ = tdf.createTable(db);
+  Pause("createTable");
+   
     _ = tdf.insert(db);
     Pause("insert");
+    
     tdf.defrep.hs = true;
     _ = tdf.update(db);
 
-    tdf.defrep.name.setZfld("Namedelete");
+    tdf.defrep.refname.setZfld("Namedelete");
     _ = tdf.insert(db);
     // delete row name key unique
     _ = tdf.delete(db, "Namedelete");
 
-    tdf.defrep.name.setZfld("toto");
+    tdf.defrep.refname.setZfld("toto");
     tdf.defrep.mnmo.setZfld("name2");
     tdf.defrep.hs = false;
     _ = tdf.insert(db);
-    tdf.defrep.name.setZfld("titi");
+    tdf.defrep.refname.setZfld("titi");
     tdf.defrep.mnmo.setZfld("name3");
     tdf.defrep.hs = false;
     _ = tdf.insert(db);
@@ -116,7 +120,7 @@ pub fn main() !void {
     db.jrnlog(sql3.Jrn.Rollback) catch unreachable;
 
     db.jrnlog(sql3.Jrn.Begin) catch  unreachable;
-    tdf.defrep.name.setZfld("Namexxx");
+    tdf.defrep.refname.setZfld("Namexxx");
     const ok = tdf.insert(db);
     if (ok )  db.jrnlog(sql3.Jrn.Commit) catch unreachable else db.jrnlog(sql3.Jrn.Commit) catch unreachable;
 
@@ -131,54 +135,54 @@ pub fn main() !void {
     const dbr = try sql3.open("sqlite", "repdb.db", sql3.Mode.ReadOnly);
 
     // key name unique
-    var nrows = tdf.lgqLIKE(dbr, "name", "toto");
+    tdf.lgqQUERY(dbr, "refname", "toto");
     Print("\r\n{s}  {s}  {s}  {s}  {s} {s} {s}  {}  \n", .{
-        tdf.defrep.name.string(),  tdf.defrep.text.string(), tdf.defrep.mnmo.string(), tdf.defrep.type.string(),
+        tdf.defrep.refname.string(),  tdf.defrep.text.string(), tdf.defrep.mnmo.string(), tdf.defrep.type.string(),
         tdf.defrep.width.string(), tdf.defrep.scal.string(), tdf.defrep.long.string(), tdf.defrep.hs,
     });
-    Print("\r\nnbr_items {d} nbr_rows:{d}\n", .{ tdf.rows.items.len, nrows });
+    Print("\r\nnbr_items = nbrows {d} \n", .{ tdf.rows.items.len});
 
     // hs value not unique
     tdf.defrep.hs = true;
-    nrows = tdf.lgqLIKE(dbr, "hs", sql3.zbool(tdf.defrep.hs));
+    tdf.lgqQUERY(dbr, "hs", sql3.zbool(tdf.defrep.hs));
     for (tdf.rows.items, 0..) |_, n| {
-        Print("\r\n{s}  {s}  {s}  {s}  {s} {s} {s}  {}  \n", .{ tdf.rows.items[n].name.string(),
+        Print("\r\n{s}  {s}  {s}  {s}  {s} {s} {s}  {}  \n", .{ tdf.rows.items[n].refname.string(),
             tdf.rows.items[n].text.string(), tdf.rows.items[n].mnmo.string(), tdf.rows.items[n].type.string(),
             tdf.rows.items[n].width.string(), tdf.rows.items[n].scal.string(), tdf.rows.items[n].long.string(),
             tdf.rows.items[n].hs });
     }
 
-    Print("\r\nnbr_items {d} nbr_rows:{d}\n", .{ tdf.rows.items.len, nrows });
+    Print("\r\nnbr_items {d} \n", .{ tdf.rows.items.len});
 
     // hs value not unique
     tdf.defrep.hs = false;
-    nrows = tdf.lgqLIKE(dbr, "hs", sql3.zbool(tdf.defrep.hs));
+    tdf.lgqQUERY(dbr, "hs", sql3.zbool(tdf.defrep.hs));
     for (tdf.rows.items, 0..) |_, n| {
-        Print("\r\n{s}  {s}  {s}  {s}  {s} {s} {s}  {}  \n", .{ tdf.rows.items[n].name.string(),
+        Print("\r\n{s}  {s}  {s}  {s}  {s} {s} {s}  {}  \n", .{ tdf.rows.items[n].refname.string(),
             tdf.rows.items[n].text.string(), tdf.rows.items[n].mnmo.string(), tdf.rows.items[n].type.string(),
             tdf.rows.items[n].width.string(), tdf.rows.items[n].scal.string(), tdf.rows.items[n].long.string(),
             tdf.rows.items[n].hs });
     }
-    Print("\r\nnbr_items {d} nbr_rows:{d}\n", .{ tdf.rows.items.len, nrows });
+    Print("\r\nnbr_items {d}\n", .{ tdf.rows.items.len});
 
     // mnmo value unique
-    nrows = tdf.lgqLIKE(dbr, "mnmo", "name2");
+    tdf.lgqQUERY(dbr, "mnmo", "name2");
     Print("\r\n{s}  {s}  {s}  {s}  {s} {s} {s}  {}  \n", .{
-        tdf.defrep.name.string(),  tdf.defrep.text.string(), tdf.defrep.mnmo.string(), tdf.defrep.type.string(),
+        tdf.defrep.refname.string(),  tdf.defrep.text.string(), tdf.defrep.mnmo.string(), tdf.defrep.type.string(),
         tdf.defrep.width.string(), tdf.defrep.scal.string(), tdf.defrep.long.string(), tdf.defrep.hs,
     });
-    Print("\r\nnbr_items {d} nbr_rows:{d}\n", .{ tdf.rows.items.len, nrows });
+    Print("\r\nnbr_items {d}\n", .{ tdf.rows.items.len});
 
     // page down
-    tdf.defrep.name.setZfld("");
-    nrows = tdf.pgDown(dbr, tdf.defrep.name.string(), 10);
+    tdf.defrep.refname.setZfld("");
+    tdf.pgDown(dbr, tdf.defrep.refname.string(), 10);
     for (tdf.rows.items, 0..) |_, n| {
         Print("\r\n{s}  {s}  {s}  {s}  {s} {s} {s}  {}  \n", .{
-            tdf.rows.items[n].name.string(), tdf.rows.items[n].text.string(), tdf.rows.items[n].mnmo.string(),
+            tdf.rows.items[n].refname.string(), tdf.rows.items[n].text.string(), tdf.rows.items[n].mnmo.string(),
             tdf.rows.items[n].type.string(), tdf.rows.items[n].width.string(), tdf.rows.items[n].scal.string(),
             tdf.rows.items[n].long.string(), tdf.rows.items[n].hs });
     }
-    Print("\r\nnbr_items {d} nbr_rows:{d}\n", .{ tdf.rows.items.len, nrows });
+    Print("\r\nnbr_items {d}\n", .{ tdf.rows.items.len});
 
     Pause(" contrôle memeoire");
     tdf.clearRows();

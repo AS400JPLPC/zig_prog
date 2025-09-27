@@ -86,18 +86,18 @@ pub fn Panel_DEFREP() *pnl.PANEL{
 
 			//----------------------
 			Panel.label.append(mem.allocTui,lbl.newLabel("L33",3,4,"Name Extended")) catch unreachable ;
-			Panel.label.append(mem.allocTui,lbl.newLabel("L320",3,20,"Text")) catch unreachable ;
-			Panel.label.append(mem.allocTui,lbl.newLabel("L371",3,71,"MNEMO")) catch unreachable ;
-			Panel.label.append(mem.allocTui,lbl.newLabel("L378",3,78,"T")) catch unreachable ;
-			Panel.label.append(mem.allocTui,lbl.newLabel("L380",3,80,"Width")) catch unreachable ;
-			Panel.label.append(mem.allocTui,lbl.newLabel("L386",3,86,"Scal")) catch unreachable ;
-			Panel.label.append(mem.allocTui,lbl.newLabel("L391",3,91,"Long")) catch unreachable ;
-			Panel.label.append(mem.allocTui,lbl.newLabel("L396",3,96,"Hs")) catch unreachable ;
+			Panel.label.append(mem.allocTui,lbl.newLabel("L320",3,30,"Text")) catch unreachable ;
+			Panel.label.append(mem.allocTui,lbl.newLabel("L371",3,81,"MNEMO")) catch unreachable ;
+			Panel.label.append(mem.allocTui,lbl.newLabel("L378",3,88,"T")) catch unreachable ;
+			Panel.label.append(mem.allocTui,lbl.newLabel("L380",3,90,"Width")) catch unreachable ;
+			Panel.label.append(mem.allocTui,lbl.newLabel("L386",3,96,"Scal")) catch unreachable ;
+			Panel.label.append(mem.allocTui,lbl.newLabel("L391",3,101,"Long")) catch unreachable ;
+			Panel.label.append(mem.allocTui,lbl.newLabel("L396",3,106,"Hs")) catch unreachable ;
 
 			//----------------------
 
 
-			Panel.field.append(mem.allocTui,fld.newFieldTextFree("NAME",4,4,15,
+			Panel.field.append(mem.allocTui,fld.newFieldTextFree("NAME",4,4,25,
 			"",
 			false,
 			"Le nom est obligantoire",
@@ -106,7 +106,7 @@ pub fn Panel_DEFREP() *pnl.PANEL{
 			fld.setTask(Panel,fld.getIndex(Panel,"NAME") catch unreachable,"TctlName") catch unreachable ; 
 
 
-			Panel.field.append(mem.allocTui,fld.newFieldTextFree("TEXT",4,20,50,
+			Panel.field.append(mem.allocTui,fld.newFieldTextFree("TEXT",4,30,50,
 			"",
 			false,
 			"Text Invalide",
@@ -115,7 +115,7 @@ pub fn Panel_DEFREP() *pnl.PANEL{
 			fld.setTask(Panel,fld.getIndex(Panel,"TEXT") catch unreachable,"TctlText") catch unreachable ; 
 
 
-			Panel.field.append(mem.allocTui,fld.newFieldAlphaNumericUpper("MNEMO",4,71,6,
+			Panel.field.append(mem.allocTui,fld.newFieldAlphaNumericUpper("MNEMO",4,81,6,
 			"",
 			false,
 			"Mnemonic onmigatoire",
@@ -124,7 +124,7 @@ pub fn Panel_DEFREP() *pnl.PANEL{
 			fld.setTask(Panel,fld.getIndex(Panel,"MNEMO") catch unreachable,"TctlMnemo") catch unreachable ; 
 
 
-			Panel.field.append(mem.allocTui,fld.newFieldFunc("TYPE",4,78,1,
+			Panel.field.append(mem.allocTui,fld.newFieldFunc("TYPE",4,88,1,
 			"",
 			false,
 			"Ctype",
@@ -133,7 +133,7 @@ pub fn Panel_DEFREP() *pnl.PANEL{
 			fld.setTask(Panel,fld.getIndex(Panel,"TYPE") catch unreachable,"TctrlType") catch unreachable ; 
 
 
-			Panel.field.append(mem.allocTui,fld.newFieldUDigit("WIDTH",4,82,3,
+			Panel.field.append(mem.allocTui,fld.newFieldUDigit("WIDTH",4,92,3,
 			"",
 			false,
 			"Width Obligatoire",
@@ -142,7 +142,7 @@ pub fn Panel_DEFREP() *pnl.PANEL{
 			fld.setTask(Panel,fld.getIndex(Panel,"WIDTH") catch unreachable,"TctrlWidth") catch unreachable ; 
 
 
-			Panel.field.append(mem.allocTui,fld.newFieldUDigit("SCAL",4,87,3,
+			Panel.field.append(mem.allocTui,fld.newFieldUDigit("SCAL",4,97,3,
 			"",
 			false,
 			"Scal Obligatoire",
@@ -151,7 +151,7 @@ pub fn Panel_DEFREP() *pnl.PANEL{
 			fld.setTask(Panel,fld.getIndex(Panel,"SCAL") catch unreachable,"TctrlScal") catch unreachable ; 
 
 
-			Panel.field.append(mem.allocTui,fld.newFieldUDigit("LONG",4,92,3,
+			Panel.field.append(mem.allocTui,fld.newFieldUDigit("LONG",4,102,3,
 			"",
 			false,
 			"Longueur de la zone extended Invalide",
@@ -161,7 +161,7 @@ pub fn Panel_DEFREP() *pnl.PANEL{
 			fld.setTask(Panel,fld.getIndex(Panel,"LONG") catch unreachable,"TcrtlLong") catch unreachable ; 
 
 
-			Panel.field.append(mem.allocTui,fld.newFieldSwitch("hs",4,96,false,
+			Panel.field.append(mem.allocTui,fld.newFieldSwitch("hs",4,106,false,
 			".",
 			"Hors service")) catch unreachable ;
 
@@ -495,7 +495,7 @@ var Tkey : term.Keyboard = undefined ;
 		);
 
 		if (grd.countColumns(SFLDX)  == 0) {
-			grd.newCell(SFLDX,"NAME",15, grd.REFTYP.TEXT_FREE, term.ForegroundColor.fgYellow);
+			grd.newCell(SFLDX,"NAME",25, grd.REFTYP.TEXT_FREE, term.ForegroundColor.fgYellow);
 			grd.newCell(SFLDX,"TEXT",50, grd.REFTYP.TEXT_FREE, term.ForegroundColor.fgGreen);
 			grd.newCell(SFLDX,"MNEMO",6, grd.REFTYP.TEXT_FREE, term.ForegroundColor.fgYellow);
 			grd.newCell(SFLDX,"T",1, grd.REFTYP.TEXT_FREE, term.ForegroundColor.fgRed);
