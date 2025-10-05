@@ -83,30 +83,32 @@ pub fn Panel_DEFREP() *pnl.PANEL{
 			Panel.button.append(mem.allocTui,btn.newButton(kbd.F11,true,false,"Update")) catch unreachable ;
 			Panel.button.append(mem.allocTui,btn.newButton(kbd.F12,true,false,"Return")) catch unreachable ;
 			Panel.button.append(mem.allocTui,btn.newButton(kbd.F23,true,false,"Delette")) catch unreachable ;
+			Panel.button.append(mem.allocTui,btn.newButton(kbd.pageUp,true,false,"")) catch unreachable ;
+			Panel.button.append(mem.allocTui,btn.newButton(kbd.pageDown,true,false,"")) catch unreachable ;
 
 			//----------------------
 			Panel.label.append(mem.allocTui,lbl.newLabel("L33",3,4,"Name Extended")) catch unreachable ;
-			Panel.label.append(mem.allocTui,lbl.newLabel("L320",3,30,"Text")) catch unreachable ;
-			Panel.label.append(mem.allocTui,lbl.newLabel("L371",3,81,"MNEMO")) catch unreachable ;
-			Panel.label.append(mem.allocTui,lbl.newLabel("L378",3,88,"T")) catch unreachable ;
-			Panel.label.append(mem.allocTui,lbl.newLabel("L380",3,90,"Width")) catch unreachable ;
-			Panel.label.append(mem.allocTui,lbl.newLabel("L386",3,96,"Scal")) catch unreachable ;
-			Panel.label.append(mem.allocTui,lbl.newLabel("L391",3,101,"Long")) catch unreachable ;
-			Panel.label.append(mem.allocTui,lbl.newLabel("L396",3,106,"Hs")) catch unreachable ;
+			Panel.label.append(mem.allocTui,lbl.newLabel("L320",3,20,"Text")) catch unreachable ;
+			Panel.label.append(mem.allocTui,lbl.newLabel("L371",3,71,"MNEMO")) catch unreachable ;
+			Panel.label.append(mem.allocTui,lbl.newLabel("L378",3,78,"T")) catch unreachable ;
+			Panel.label.append(mem.allocTui,lbl.newLabel("L380",3,80,"Width")) catch unreachable ;
+			Panel.label.append(mem.allocTui,lbl.newLabel("L386",3,86,"Scal")) catch unreachable ;
+			Panel.label.append(mem.allocTui,lbl.newLabel("L391",3,91,"Long")) catch unreachable ;
+			Panel.label.append(mem.allocTui,lbl.newLabel("L396",3,96,"Hs")) catch unreachable ;
 
 			//----------------------
 
 
-			Panel.field.append(mem.allocTui,fld.newFieldTextFree("NAME",4,4,25,
+			Panel.field.append(mem.allocTui,fld.newFieldTextFree("REFNAME",4,4,15,
 			"",
 			false,
 			"Le nom est obligantoire",
 			"Nom de la zone étendue",
 			"")) catch unreachable ;
-			fld.setTask(Panel,fld.getIndex(Panel,"NAME") catch unreachable,"TctlName") catch unreachable ; 
+			fld.setTask(Panel,fld.getIndex(Panel,"REFNAME") catch unreachable,"TctlName") catch unreachable ; 
 
 
-			Panel.field.append(mem.allocTui,fld.newFieldTextFree("TEXT",4,30,50,
+			Panel.field.append(mem.allocTui,fld.newFieldTextFree("TEXT",4,20,50,
 			"",
 			false,
 			"Text Invalide",
@@ -115,7 +117,7 @@ pub fn Panel_DEFREP() *pnl.PANEL{
 			fld.setTask(Panel,fld.getIndex(Panel,"TEXT") catch unreachable,"TctlText") catch unreachable ; 
 
 
-			Panel.field.append(mem.allocTui,fld.newFieldAlphaNumericUpper("MNEMO",4,81,6,
+			Panel.field.append(mem.allocTui,fld.newFieldAlphaNumericUpper("MNEMO",4,71,6,
 			"",
 			false,
 			"Mnemonic onmigatoire",
@@ -124,7 +126,7 @@ pub fn Panel_DEFREP() *pnl.PANEL{
 			fld.setTask(Panel,fld.getIndex(Panel,"MNEMO") catch unreachable,"TctlMnemo") catch unreachable ; 
 
 
-			Panel.field.append(mem.allocTui,fld.newFieldFunc("TYPE",4,88,1,
+			Panel.field.append(mem.allocTui,fld.newFieldFunc("TYPE",4,78,1,
 			"",
 			false,
 			"Ctype",
@@ -133,7 +135,7 @@ pub fn Panel_DEFREP() *pnl.PANEL{
 			fld.setTask(Panel,fld.getIndex(Panel,"TYPE") catch unreachable,"TctrlType") catch unreachable ; 
 
 
-			Panel.field.append(mem.allocTui,fld.newFieldUDigit("WIDTH",4,92,3,
+			Panel.field.append(mem.allocTui,fld.newFieldUDigit("WIDTH",4,82,3,
 			"",
 			false,
 			"Width Obligatoire",
@@ -142,7 +144,7 @@ pub fn Panel_DEFREP() *pnl.PANEL{
 			fld.setTask(Panel,fld.getIndex(Panel,"WIDTH") catch unreachable,"TctrlWidth") catch unreachable ; 
 
 
-			Panel.field.append(mem.allocTui,fld.newFieldUDigit("SCAL",4,97,3,
+			Panel.field.append(mem.allocTui,fld.newFieldUDigit("SCAL",4,87,3,
 			"",
 			false,
 			"Scal Obligatoire",
@@ -151,7 +153,7 @@ pub fn Panel_DEFREP() *pnl.PANEL{
 			fld.setTask(Panel,fld.getIndex(Panel,"SCAL") catch unreachable,"TctrlScal") catch unreachable ; 
 
 
-			Panel.field.append(mem.allocTui,fld.newFieldUDigit("LONG",4,102,3,
+			Panel.field.append(mem.allocTui,fld.newFieldUDigit("LONG",4,92,3,
 			"",
 			false,
 			"Longueur de la zone extended Invalide",
@@ -161,9 +163,60 @@ pub fn Panel_DEFREP() *pnl.PANEL{
 			fld.setTask(Panel,fld.getIndex(Panel,"LONG") catch unreachable,"TcrtlLong") catch unreachable ; 
 
 
-			Panel.field.append(mem.allocTui,fld.newFieldSwitch("hs",4,106,false,
+			Panel.field.append(mem.allocTui,fld.newFieldSwitch("hs",4,96,false,
 			".",
 			"Hors service")) catch unreachable ;
+
+
+			return Panel;
+
+
+	}
+
+
+
+//----------------------
+// Define Global DSPF PANEL
+//----------------------
+
+
+
+pub fn Panel_PQUERY() *pnl.PANEL{
+			//----------------------
+			var Panel : *pnl.PANEL = pnl.newPanelC("PQUERY",
+			1, 1,
+			41, 132,
+			cdr.line1,
+			"QUERY");
+
+			//----------------------
+			Panel.button.append(mem.allocTui,btn.newButton(kbd.F1,true,false,"Help")) catch unreachable ;
+			Panel.button.append(mem.allocTui,btn.newButton(kbd.F3,true,false,"Exit")) catch unreachable ;
+			Panel.button.append(mem.allocTui,btn.newButton(kbd.F12,true,false,"Return")) catch unreachable ;
+			Panel.button.append(mem.allocTui,btn.newButton(kbd.ctrlV,true,false,"ctrlV")) catch unreachable ;
+
+			//----------------------
+			Panel.label.append(mem.allocTui,lbl.newLabel("L73",7,3,"Text:")) catch unreachable ;
+			Panel.label.append(mem.allocTui,lbl.newLabel("L43",4,3,"Field:")) catch unreachable ;
+
+			//----------------------
+
+
+			Panel.field.append(mem.allocTui,fld.newFieldTextFree("ztext",7,8,20,
+			"",
+			false,
+			"Zone obligatoire",
+			"recherhe valeur",
+			"")) catch unreachable ;
+			fld.setTask(Panel,fld.getIndex(Panel,"ztext") catch unreachable,"Tctlztext") catch unreachable ; 
+
+
+			Panel.field.append(mem.allocTui,fld.newFieldFunc("zfield",4,9,25,
+			"",
+			false,
+			"Cquery",
+			"saisie obligatoire",
+			"Choix des zones à scaner")) catch unreachable ;
 
 
 			return Panel;
@@ -222,13 +275,50 @@ pub fn Panel_DEFREP() *pnl.PANEL{
 	}
 
 
+	fn Cquery( vpnl : *pnl.PANEL , vfld :* fld.FIELD) void {
+		var cellPos:usize = 0;
+		const Xcombo : *grd.GRID = grd.newGridC(
+				"Cquery",
+				4, 39,
+				6,
+				grd.gridStyle,
+				grd.CADRE.line1,
+		);
+
+		defer grd.freeGrid(Xcombo);
+		defer mem.allocTui.destroy(Xcombo);
+
+		grd.newCell(Xcombo,"ztext",25, grd.REFTYP.TEXT_FREE, term.ForegroundColor.fgGreen);
+		grd.setHeaders(Xcombo) ;
+
+		// data
+		grd.addRows(Xcombo , &.{"??"});
+
+		if (std.mem.eql(u8,vfld.text,"??") == true) 	cellPos = 0;
+
+		// Interrogation
+		var Gkey :grd.GridSelect = undefined ;
+		defer Gkey.Buf.deinit(mem.allocTui);
+
+		Gkey =grd.ioCombo(Xcombo,cellPos);
+		pnl.rstPanel(grd.GRID,Xcombo, vpnl);
+
+		if ( Gkey.Key == kbd.esc ) return ;
+		vfld.text = Gkey.Buf.items[0];
+		return ;
+	}
+
+
 	const FuncEnum = enum {
 		Ftype,
+
+		CQUERY,
 
 		none,
 		fn run(self: FuncEnum, vpnl : *pnl.PANEL, vfld: *fld.FIELD ) void {
 			switch (self) {
 			.Ftype => Ctype(vpnl,vfld),
+			.CQUERY => Cquery(vpnl,vfld),
 			else => dsperr.errorForms(vpnl, Error.main_function_Enum_invalide),
 			}
 		}
@@ -309,6 +399,15 @@ pub fn Panel_DEFREP() *pnl.PANEL{
 			check = true;
 		}
 	}
+	fn Tctlztext(vpnl: *pnl.PANEL, vfld: *fld.FIELD) void {
+		if (std.mem.eql(u8, vfld.text ,"")) {
+			term.gotoXY(vpnl.posx + vfld.posx - 1 , vpnl.posy + vfld.posy - 1);
+			term.writeStyled(vfld.text,pnl.FldErr);
+			pnl.msgErr(vpnl, "Zone obligatoire");
+			vpnl.keyField = kbd.task;
+			check = true;
+		}
+	}
 
 
 	const TaskEnum = enum {
@@ -326,6 +425,8 @@ pub fn Panel_DEFREP() *pnl.PANEL{
 
 		TcrtlLong,
 
+		Tctlztext,
+
 		none,
 		fn run(self: TaskEnum, vpnl : *pnl.PANEL, vfld: *fld.FIELD ) void {
 			switch (self) {
@@ -336,6 +437,7 @@ pub fn Panel_DEFREP() *pnl.PANEL{
 			.TctrlWidth => TctrlWidth(vpnl,vfld),
 			.TctrlScal => TctrlScal(vpnl,vfld),
 			.TcrtlLong => TcrtlLong(vpnl,vfld),
+			.Tctlztext => Tctlztext(vpnl,vfld),
 			else => dsperr.errorForms(vpnl, Error.main_run_EnumTask_invalide),
 			}
 		}
@@ -354,7 +456,10 @@ pub fn Panel_DEFREP() *pnl.PANEL{
 // define Panel
 var DEFREP : *pnl.PANEL = undefined ;
 
-var nbr_panel : i32 = 1 ;
+// define Panel
+var PQUERY : *pnl.PANEL = undefined ;
+
+var nbr_panel : i32 = 2 ;
 
 
 //----------------------------------
@@ -368,6 +473,9 @@ defer term.disableRawMode() ;
 
 // init Panel
 DEFREP = Panel_DEFREP();
+
+// init Panel
+PQUERY = Panel_PQUERY();
 
 // Initialisation
 term.resizeTerm(DEFREP.lines,DEFREP.cols);
@@ -383,6 +491,10 @@ var npnl : i32 = 1 ;
 			switch(npnl) {
 				1 => {
 					Tkey = pnl_DEFREP();
+					//--- traitement ---
+				},
+				2 => {
+					Tkey = pnl_PQUERY();
 					//--- traitement ---
 				},
 				else => {},
@@ -468,6 +580,58 @@ var Tkey : term.Keyboard = undefined ;
 			//F23 "Delette"
 			.F23  => {
 			},
+			//pageUp ""
+			.pageUp  => {
+			},
+			//pageDown ""
+			.pageDown  => {
+			},
+			else => {},
+
+		}
+
+		if (Tkey.Key == kbd.F3) break; // end work
+		if (Tkey.Key == kbd.F12) break; // end work
+	}
+
+	return Tkey;
+}
+
+fn pnl_PQUERY() term.Keyboard {
+
+//----------------------------------
+//  run Function ex: PANEL
+//----------------------------------
+// defines the receiving structure of the keyboard
+var Tkey : term.Keyboard = undefined ;
+
+	while (true) {
+		Tkey.Key = pnl.ioPanel(PQUERY);
+		//--- ---
+
+		switch (Tkey.Key) {
+			.func => {
+			callFunc = FuncEnum.searchFn(PQUERY.field.items[PQUERY.idxfld].procfunc);
+			callFunc.run(PQUERY, &PQUERY.field.items[PQUERY.idxfld]);
+			},
+
+			// call proc contrôl chek value
+			.task => {
+			callTask = TaskEnum.searchFn(PQUERY.field.items[PQUERY.idxfld].proctask);
+			callTask.run(PQUERY, &PQUERY.field.items[PQUERY.idxfld]);
+			},
+
+
+			//----------------------
+			//F1 "Help"
+			.F1  => {
+			},
+			//F12 "Return"
+			.F12  => {
+			},
+			//ctrlV "ctrlV"
+			.ctrlV  => {
+			},
 			else => {},
 
 		}
@@ -495,14 +659,14 @@ var Tkey : term.Keyboard = undefined ;
 		);
 
 		if (grd.countColumns(SFLDX)  == 0) {
-			grd.newCell(SFLDX,"NAME",25, grd.REFTYP.TEXT_FREE, term.ForegroundColor.fgYellow);
+			grd.newCell(SFLDX,"REFNAME",15, grd.REFTYP.TEXT_FREE, term.ForegroundColor.fgYellow);
 			grd.newCell(SFLDX,"TEXT",50, grd.REFTYP.TEXT_FREE, term.ForegroundColor.fgGreen);
 			grd.newCell(SFLDX,"MNEMO",6, grd.REFTYP.TEXT_FREE, term.ForegroundColor.fgYellow);
 			grd.newCell(SFLDX,"T",1, grd.REFTYP.TEXT_FREE, term.ForegroundColor.fgRed);
 			grd.newCell(SFLDX,"WIGTH",5, grd.REFTYP.UDIGIT, term.ForegroundColor.fgMagenta);
 			grd.newCell(SFLDX,"SCAL",4, grd.REFTYP.UDIGIT, term.ForegroundColor.fgMagenta);
 			grd.newCell(SFLDX,"LONG",4, grd.REFTYP.UDIGIT, term.ForegroundColor.fgCyan);
-			grd.newCell(SFLDX,"Hs",2, grd.REFTYP.TEXT_FREE, term.ForegroundColor.fgRed);
+			grd.newCell(SFLDX,"Hs",2, grd.REFTYP.SWITCH, term.ForegroundColor.fgRed);
 		}
 		grd.setHeaders(SFLDX) ;
 

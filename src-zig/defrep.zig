@@ -100,7 +100,7 @@ fn Perror(errmsg: []const u8) void {
 
 pub fn Panel_DEFREP() *pnl.PANEL {
     //----------------------
-    var Panel: *pnl.PANEL = pnl.newPanelC("DEFREP", 1, 1, 44, 168, cdr.line1, "Def.REPERTOIRE");
+    var Panel: *pnl.PANEL = pnl.newPanelC("DEFREP", 1, 1, 44, 132, cdr.line1, "Def.REPERTOIRE");
 
     //----------------------
     Panel.button.append(mem.allocTui, btn.newButton(kbd.F1, true, false, "Help")) catch unreachable;
@@ -111,6 +111,8 @@ pub fn Panel_DEFREP() *pnl.PANEL {
     Panel.button.append(mem.allocTui, btn.newButton(kbd.F11, true, false, "Update")) catch unreachable;
     Panel.button.append(mem.allocTui, btn.newButton(kbd.F12, true, false, "Return")) catch unreachable;
     Panel.button.append(mem.allocTui, btn.newButton(kbd.F23, true, false, "Delette")) catch unreachable;
+	Panel.button.append(mem.allocTui,btn.newButton(kbd.pageUp,true,false,"")) catch unreachable ;
+	Panel.button.append(mem.allocTui,btn.newButton(kbd.pageDown,true,false,"")) catch unreachable ;
 
     //----------------------
     Panel.label.append(mem.allocTui, lbl.newLabel("L33", 3, 4, "Name Extended")) catch unreachable;
@@ -126,32 +128,110 @@ pub fn Panel_DEFREP() *pnl.PANEL {
     // info task != "" -> requires= false
 
     Panel.field.append(mem.allocTui, fld.newFieldTextFree("REFNAME", 4, 4, 25, "", false, // requires
-        "Le nom est obligantoire", "Nom de la zone étendue", "^[a-z]{1,1}[a-z0-9\\-_ ]{1,}$")) catch unreachable;
+        "Le nom est obligantoire",
+        "Nom de la zone étendue",
+         "^[a-z]{1,1}[a-z0-9\\-_ ]{1,}$")) catch unreachable;
     fld.setTask(Panel, fld.getIndex(Panel, "REFNAME") catch unreachable, "TctlRefName") catch unreachable;
 
-    Panel.field.append(mem.allocTui, fld.newFieldTextFree("TEXT", 4, 30, 50, "", false, "Text Invalide", "Libellé de la zone NAME Extended", "")) catch unreachable;
+    Panel.field.append(mem.allocTui, fld.newFieldTextFree("TEXT", 4, 30, 50, "",
+        false, "Text Invalide",
+        "Libellé de la zone NAME Extended", "")) catch unreachable;
     fld.setTask(Panel, fld.getIndex(Panel, "TEXT") catch unreachable, "TctlText") catch unreachable;
 
-    Panel.field.append(mem.allocTui, fld.newFieldAlphaNumericUpper("MNEMO", 4, 81, 6, "", false, "Mnemonic onmigatoire", "mnemoniqque de la zone NAME", "")) catch unreachable;
+    Panel.field.append(mem.allocTui, fld.newFieldAlphaNumeric("MNEMO", 4, 81, 6,"", false,
+        "Mnemonic onmigatoire",
+       "mnemoniqque de la zone NAME", "")) catch unreachable;
     fld.setTask(Panel, fld.getIndex(Panel, "MNEMO") catch unreachable, "TctlMnemo") catch unreachable;
 
-    Panel.field.append(mem.allocTui, fld.newFieldFunc("TYPE", 4, 88, 1, "", false, "Ctype", "Type obligatoire", "Type de zone")) catch unreachable;
+    Panel.field.append(mem.allocTui, fld.newFieldFunc("TYPE", 4, 88, 1, "",
+        false,
+        "Ctype",
+        "Type obligatoire",
+        "Type de zone")) catch unreachable;
     fld.setTask(Panel, fld.getIndex(Panel, "TYPE") catch unreachable, "TctrlType") catch unreachable;
 
-    Panel.field.append(mem.allocTui, fld.newFieldUDigit("WIDTH", 4, 92, 3, "", false, "Width Obligatoire", "longueur de la zone numérique", "[0-9]{1,3}")) catch unreachable;
+    Panel.field.append(mem.allocTui, fld.newFieldUDigit("WIDTH", 4, 92, 3, "",
+        false,
+        "Width Obligatoire",
+        "longueur de la zone numérique",
+        "[0-9]{1,3}")) catch unreachable;
     fld.setTask(Panel, fld.getIndex(Panel, "WIDTH") catch unreachable, "TctrlWidth") catch unreachable;
 
-    Panel.field.append(mem.allocTui, fld.newFieldUDigit("SCAL", 4, 98, 2, "", false, "Scal Obligatoire", "partie decimale", "[0-9]{1,2}")) catch unreachable;
+    Panel.field.append(mem.allocTui, fld.newFieldUDigit("SCAL", 4, 98, 2, "",
+        false,
+        "Scal Obligatoire",
+        "partie decimale",
+        "[0-9]{1,2}")) catch unreachable;
     fld.setTask(Panel, fld.getIndex(Panel, "SCAL") catch unreachable, "TctrlScal") catch unreachable;
 
-    Panel.field.append(mem.allocTui, fld.newFieldUDigit("LONG", 4, 102, 4, "", false, "Longueur extended Invalide", "Longueur de la zone", "[0-9]{1,4}")) catch unreachable;
+    Panel.field.append(mem.allocTui, fld.newFieldUDigit("LONG", 4, 102, 3, "",
+        false,
+        "Longueur extended Invalide",
+        "Longueur de la zone",
+        "[0-9]{1,3}")) catch unreachable;
     fld.setProtect(Panel, fld.getIndex(Panel, "LONG") catch unreachable, true) catch unreachable;
     fld.setTask(Panel, fld.getIndex(Panel, "LONG") catch unreachable, "TcrtlLong") catch unreachable;
 
-    Panel.field.append(mem.allocTui, fld.newFieldSwitch("hs", 4, 106, false, ".", "Hors service")) catch unreachable;
+    Panel.field.append(mem.allocTui, fld.newFieldSwitch("hs", 4, 106,
+        false,
+        ".",
+        "Hors service")) catch unreachable;
 
     return Panel;
 }
+
+
+//----------------------
+// Define Global DSPF PANEL
+//----------------------
+
+
+
+pub fn Panel_PQUERY() *pnl.PANEL{
+			//----------------------
+			var Panel : *pnl.PANEL = pnl.newPanelC("PQUERY",
+			1, 1,
+			41, 132,
+			cdr.line1,
+			"QUERY");
+
+			//----------------------
+			Panel.button.append(mem.allocTui,btn.newButton(kbd.F1,true,false,"Help")) catch unreachable ;
+			Panel.button.append(mem.allocTui,btn.newButton(kbd.F3,true,false,"Exit")) catch unreachable ;
+			Panel.button.append(mem.allocTui,btn.newButton(kbd.F12,true,false,"Return")) catch unreachable ;
+			Panel.button.append(mem.allocTui,btn.newButton(kbd.ctrlV,true,false,"ctrlV")) catch unreachable ;
+
+			//----------------------
+			Panel.label.append(mem.allocTui,lbl.newLabel("L43",4,3,"Field:")) catch unreachable ;
+			Panel.label.append(mem.allocTui,lbl.newLabel("L73",7,3,"Text:")) catch unreachable ;
+
+			//----------------------
+
+
+			Panel.field.append(mem.allocTui,fld.newFieldFunc("zfield",4,9,25,
+			"",
+			false,
+			"Cquery",
+			"saisie obligatoire",
+			"Choix des zones à scaner")) catch unreachable ;
+
+			Panel.field.append(mem.allocTui,fld.newFieldTextFree("ztext",7,8,20,
+			"",
+			false,
+			"Zone obligatoire",
+			"recherhe valeur",
+			"")) catch unreachable ;
+			fld.setTask(Panel,fld.getIndex(Panel,"ztext") catch unreachable,"Tctlztext") catch unreachable ; 
+
+
+			return Panel;
+
+
+	}
+
+
+
+
 
 //Errors
 pub const Error = error{
@@ -207,13 +287,52 @@ fn Ctype(vpnl: *pnl.PANEL, vfld: *fld.FIELD) void {
     return;
 }
 
+
+fn Cquery( vpnl : *pnl.PANEL , vfld :* fld.FIELD) void {
+	const cellPos:usize = 0;
+	const Xcombo : *grd.GRID = grd.newGridC(
+			"Cquery",
+			4, 39,
+			6,
+			grd.gridStyle,
+			grd.CADRE.line1,
+	);
+
+	defer grd.freeGrid(Xcombo);
+	defer mem.allocTui.destroy(Xcombo);
+
+	grd.newCell(Xcombo,"ztext",25, grd.REFTYP.TEXT_FREE, term.ForegroundColor.fgGreen);
+	grd.setHeaders(Xcombo) ;
+
+	// data
+	grd.addRows(Xcombo , &.{"refname"});
+	grd.addRows(Xcombo , &.{"text"});
+    grd.addRows(Xcombo , &.{"mnmo"});
+    grd.addRows(Xcombo , &.{"type"});
+    grd.addRows(Xcombo , &.{"hs"});
+
+	// Interrogation
+	var Gkey :grd.GridSelect = undefined ;
+	defer Gkey.Buf.deinit(mem.allocTui);
+
+	Gkey =grd.ioCombo(Xcombo,cellPos);
+	pnl.rstPanel(grd.GRID,Xcombo, vpnl);
+
+	if ( Gkey.Key == kbd.esc ) return ;
+	vfld.text = Gkey.Buf.items[0];
+	return ;
+}
+
 const FuncEnum = enum {
     Ctype,
 
-    none,
+	Cquery,
+
+	none,
     fn run(self: FuncEnum, vpnl: *pnl.PANEL, vfld: *fld.FIELD) void {
         switch (self) {
-            .Ctype => Ctype(vpnl, vfld),
+            .Ctype  => Ctype(vpnl, vfld),
+            .Cquery => Cquery(vpnl, vfld),
             else => dsperr.errorForms(vpnl, Error.main_function_Enum_invalide),
         }
     }
@@ -308,29 +427,40 @@ fn TctrlWidth(vpnl: *pnl.PANEL, vfld: *fld.FIELD) void {
 }
 
 fn TctrlScal(vpnl: *pnl.PANEL, vfld: *fld.FIELD) void {
+    const vtype = fld.getText(vpnl, fld.getIndex(vpnl, "TYPE") catch unreachable) catch unreachable;
+    if (!std.mem.eql(u8, vtype, "N")) {
+        vfld.text = "0" ;
+        fld.printField(vpnl, vpnl.field.items[vpnl.idxfld]);
+        fld.displayField(vpnl, vpnl.field.items[vpnl.idxfld]);
+        return;
+    }
+
+        
     if (std.mem.eql(u8, vfld.text, "")) {
         term.gotoXY(vpnl.posx + vfld.posx - 1, vpnl.posy + vfld.posy - 1);
         term.writeStyled(vfld.text, pnl.FldErr);
         pnl.msgErr(vpnl, "Scal Obligatoire");
         vpnl.keyField = kbd.task;
         check = true;
+        fld.printField(vpnl, vpnl.field.items[vpnl.idxfld]);
+        fld.displayField(vpnl, vpnl.field.items[vpnl.idxfld]);
+        return;
     }
-    var xx = fld.getText(vpnl, fld.getIndex(vpnl, "TYPE") catch unreachable) catch unreachable;
-    if (!std.mem.eql(u8, xx, "N")) vfld.text = "0" else {
-        var width: u64 = 0;
-        var scal: u64 = 0;
-        xx = fld.getText(vpnl, fld.getIndex(vpnl, "WIDTH") catch unreachable) catch unreachable;
-        if (!std.mem.eql(u8, xx, ""))
-            width = std.fmt.parseUnsigned(u64, xx, 10) catch unreachable;
-        scal = std.fmt.parseUnsigned(u64, vfld.text, 10) catch unreachable;
-        if (width + scal > 34) {
-            term.gotoXY(vpnl.posx + vfld.posx - 1, vpnl.posy + vfld.posy - 1);
-            term.writeStyled(vfld.text, pnl.FldErr);
-            pnl.msgErr(vpnl, "zone numérique width + scal trop grande max: 34");
-            vpnl.keyField = kbd.task;
-            check = true;
-        }
+    
+    var width: u64 = 0;
+    var scal: u64 = 0;
+    const xx = fld.getText(vpnl, fld.getIndex(vpnl, "WIDTH") catch unreachable) catch unreachable;
+    if (!std.mem.eql(u8, xx, ""))
+        width = std.fmt.parseUnsigned(u64, xx, 10) catch unreachable;
+    scal = std.fmt.parseUnsigned(u64, vfld.text, 10) catch unreachable;
+    if (width + scal > 34) {
+        term.gotoXY(vpnl.posx + vfld.posx - 1, vpnl.posy + vfld.posy - 1);
+        term.writeStyled(vfld.text, pnl.FldErr);
+        pnl.msgErr(vpnl, "zone numérique width + scal trop grande max: 34");
+        vpnl.keyField = kbd.task;
+        check = true;
     }
+    
     fld.printField(vpnl, vpnl.field.items[vpnl.idxfld]);
     fld.displayField(vpnl, vpnl.field.items[vpnl.idxfld]);
 }
@@ -346,9 +476,10 @@ fn TcrtlLong(vpnl: *pnl.PANEL, vfld: *fld.FIELD) void {
     xx = fld.getText(vpnl, fld.getIndex(vpnl, "SCAL") catch unreachable) catch unreachable;
     if (!std.mem.eql(u8, xx, "")) {
         scal = std.fmt.parseUnsigned(u64, xx, 10) catch unreachable;
+        scal += 1 ; // add ","
     }
 
-    width += scal;
+    width += scal ;
     vfld.text = std.fmt.allocPrint(mem.allocTui, "{d}", .{width}) catch unreachable;
 
     fld.printField(vpnl, vpnl.field.items[vpnl.idxfld]);
@@ -362,6 +493,16 @@ fn TcrtlLong(vpnl: *pnl.PANEL, vfld: *fld.FIELD) void {
         check = true;
     }
 }
+
+	fn Tctlztext(vpnl: *pnl.PANEL, vfld: *fld.FIELD) void {
+		if (std.mem.eql(u8, vfld.text ,"")) {
+			term.gotoXY(vpnl.posx + vfld.posx - 1 , vpnl.posy + vfld.posy - 1);
+			term.writeStyled(vfld.text,pnl.FldErr);
+			pnl.msgErr(vpnl, "Zone obligatoire");
+			vpnl.keyField = kbd.task;
+			check = true;
+		}
+	}
 
 const TaskEnum = enum {
     TctlRefName,
@@ -378,6 +519,8 @@ const TaskEnum = enum {
 
     TcrtlLong,
 
+	Tctlztext,
+
     none,
     fn run(self: TaskEnum, vpnl: *pnl.PANEL, vfld: *fld.FIELD) void {
         check = false;
@@ -389,6 +532,7 @@ const TaskEnum = enum {
             .TcrtlLong => TcrtlLong(vpnl, vfld),
             .TctrlWidth => TctrlWidth(vpnl, vfld),
             .TctrlScal => TctrlScal(vpnl, vfld),
+            .Tctlztext => Tctlztext(vpnl,vfld),
             else => dsperr.errorForms(vpnl, Error.main_run_EnumTask_invalide),
         }
     }
@@ -402,7 +546,10 @@ const TaskEnum = enum {
 var callTask: TaskEnum = undefined;
 
 // define Panel
-var DEFREP: *pnl.PANEL = undefined;
+var PDEFREP: *pnl.PANEL = undefined;
+
+// define Panel
+var PQUERY : *pnl.PANEL = undefined ;
 
 var nbr_panel: i32 = 1;
 
@@ -419,10 +566,13 @@ pub fn main() !void {
     defer term.disableRawMode();
 
     // init Panel
-    DEFREP = Panel_DEFREP();
+    PDEFREP = Panel_DEFREP();
 
+    // init Panel
+    PQUERY = Panel_PQUERY();
+    
     // Initialisation
-    term.resizeTerm(DEFREP.lines, DEFREP.cols);
+    term.resizeTerm(PDEFREP.lines, PDEFREP.cols);
 
     term.titleTerm("MY-REPERTOIRE");
 
@@ -482,20 +632,20 @@ fn pnl_DEFREP() term.Keyboard {
     var ok : bool = false;
 
     while (true) {
-        Tkey.Key = pnl.ioPanel(DEFREP);
+        Tkey.Key = pnl.ioPanel(PDEFREP);
         //--- ---
 
         switch (Tkey.Key) {
             // call function Combo ...
             .func => {
-                callFunc = FuncEnum.searchFn(DEFREP.field.items[DEFREP.idxfld].procfunc);
-                callFunc.run(DEFREP, &DEFREP.field.items[DEFREP.idxfld]);
+                callFunc = FuncEnum.searchFn(PDEFREP.field.items[PDEFREP.idxfld].procfunc);
+                callFunc.run(PDEFREP, &PDEFREP.field.items[PDEFREP.idxfld]);
             },
 
             // call proc contrôl chek value
             .task => {
-                callTask = TaskEnum.searchFn(DEFREP.field.items[DEFREP.idxfld].proctask);
-                callTask.run(DEFREP, &DEFREP.field.items[DEFREP.idxfld]);
+                callTask = TaskEnum.searchFn(PDEFREP.field.items[PDEFREP.idxfld].proctask);
+                callTask.run(PDEFREP, &PDEFREP.field.items[PDEFREP.idxfld]);
             },
             //----------------------
             //F1 "Help"
@@ -503,90 +653,104 @@ fn pnl_DEFREP() term.Keyboard {
 
             .F4 => {
 
+                Tkey = pnl_PQUERY();
                 
             },
             //F7 "Display GRID"
             .F7 => {
-                ok = Grepertoir(DEFREP) ;
+                ok = Grepertoire(PDEFREP, .F7) ;
                 if (ok) {
-                    fld.setText(DEFREP,0,trep.defrep.refname.string()) catch |err| {dsperr.errorForms(DEFREP,err);};
-                    fld.setText(DEFREP,1,trep.defrep.text.string()) catch |err| {dsperr.errorForms(DEFREP,err);};
-                    fld.setText(DEFREP,2,trep.defrep.mnmo.string()) catch |err| {dsperr.errorForms(DEFREP,err);};
-                    fld.setText(DEFREP,3,trep.defrep.type.string()) catch |err| {dsperr.errorForms(DEFREP,err);};
-                    fld.setText(DEFREP,4,trep.defrep.width.strUInt()) catch |err| {dsperr.errorForms(DEFREP,err);};
-                    fld.setText(DEFREP,5,trep.defrep.scal.strUInt()) catch |err| {dsperr.errorForms(DEFREP,err);};
-                    fld.setText(DEFREP,6,trep.defrep.long.strUInt()) catch |err| {dsperr.errorForms(DEFREP,err);};
-                    fld.setSwitch(DEFREP,7,trep.defrep.hs) catch |err| {dsperr.errorForms(DEFREP,err);};
-                    pnl.printPanel(DEFREP);
+                    fld.setText(PDEFREP,0,trep.defrep.refname.string()) catch |err| {dsperr.errorForms(PDEFREP,err);};
+                    fld.setText(PDEFREP,1,trep.defrep.text.string()) catch |err| {dsperr.errorForms(PDEFREP,err);};
+                    fld.setText(PDEFREP,2,trep.defrep.mnmo.string()) catch |err| {dsperr.errorForms(PDEFREP,err);};
+                    fld.setText(PDEFREP,3,trep.defrep.type.string()) catch |err| {dsperr.errorForms(PDEFREP,err);};
+                    fld.setText(PDEFREP,4,trep.defrep.width.strUInt()) catch |err| {dsperr.errorForms(PDEFREP,err);};
+                    fld.setText(PDEFREP,5,trep.defrep.scal.strUInt()) catch |err| {dsperr.errorForms(PDEFREP,err);};
+                    fld.setText(PDEFREP,6,trep.defrep.long.strUInt()) catch |err| {dsperr.errorForms(PDEFREP,err);};
+                    fld.setSwitch(PDEFREP,7,trep.defrep.hs) catch |err| {dsperr.errorForms(PDEFREP,err);};
+                    pnl.printPanel(PDEFREP);
                 }
             },
             //F9 "Enrg."
             .F9 => {
-                for (DEFREP.field.items, 0..) |f, idxfld| {
+                for (PDEFREP.field.items, 0..) |f, idxfld| {
                     if (!std.mem.eql(u8, f.proctask, "")) {
-                        DEFREP.idxfld = idxfld;
+                        PDEFREP.idxfld = idxfld;
                         callTask = TaskEnum.searchFn(f.proctask);
-                        callTask.run(DEFREP, &DEFREP.field.items[idxfld]);
+                        callTask.run(PDEFREP, &PDEFREP.field.items[idxfld]);
                         if (check) break;
                     }
                 }
                 if (!check) {
                     // work enrg.
-                    trep.defrep.refname.setZfld(DEFREP.field.items[0].text);
-                    trep.defrep.text.setZfld(DEFREP.field.items[1].text);
-                    trep.defrep.mnmo.setZfld(DEFREP.field.items[2].text);
-                    trep.defrep.type.setZfld(DEFREP.field.items[3].text);
-                    trep.defrep.width.setDcml(DEFREP.field.items[4].text);
-                    trep.defrep.scal.setDcml(DEFREP.field.items[5].text);
-                    trep.defrep.long.setDcml(DEFREP.field.items[6].text);
-                    if (DEFREP.field.items[7].zwitch == false) trep.defrep.hs =true else trep.defrep.hs = false;
+                    trep.defrep.refname.setZfld(PDEFREP.field.items[0].text);
+                    trep.defrep.text.setZfld(PDEFREP.field.items[1].text);
+                    trep.defrep.mnmo.setZfld(PDEFREP.field.items[2].text);
+                    trep.defrep.type.setZfld(PDEFREP.field.items[3].text);
+                    trep.defrep.width.setDcml(PDEFREP.field.items[4].text);
+                    trep.defrep.scal.setDcml(PDEFREP.field.items[5].text);
+                    trep.defrep.long.setDcml(PDEFREP.field.items[6].text);
+                    if (PDEFREP.field.items[7].zwitch == false) trep.defrep.hs =true else trep.defrep.hs = false;
 
-                    if( ! trep.insert(dbrw)) pnl.msgErr(DEFREP, "enregistrement inconnu")
-                    else pnl.msgErr(DEFREP, "enregistrement ajouter");
-                    fld.clearAll(DEFREP);
-                    pnl.printPanel(DEFREP);
+                    if( ! trep.insert(dbrw)) pnl.msgErr(PDEFREP, "enregistrement inconnu")
+                    else pnl.msgErr(PDEFREP, "enregistrement ajouter");
+                    fld.clearAll(PDEFREP);
+                    _= Grepertoire(PDEFREP,.pageUp);
+                    PDEFREP.idxfld =0;
+                    pnl.printPanel(PDEFREP);
                 }
             },
             //F11 "Update"
             .F11 => {
-                for (DEFREP.field.items, 0..) |f, idxfld| {
+                for (PDEFREP.field.items, 0..) |f, idxfld| {
                     if (!std.mem.eql(u8, f.proctask, "")) {
-                        DEFREP.idxfld = idxfld;
+                        PDEFREP.idxfld = idxfld;
                         callTask = TaskEnum.searchFn(f.proctask);
-                        callTask.run(DEFREP, &DEFREP.field.items[idxfld]);
+                        callTask.run(PDEFREP, &PDEFREP.field.items[idxfld]);
                         if (check) break;
                     }
                 }
                 if (!check) {
                     // work update.
  
-                    trep.defrep.refname.setZfld(DEFREP.field.items[0].text);
-                    trep.defrep.text.setZfld(DEFREP.field.items[1].text);
-                    trep.defrep.mnmo.setZfld(DEFREP.field.items[2].text);
-                    trep.defrep.type.setZfld(DEFREP.field.items[3].text);
-                    trep.defrep.width.setDcml(DEFREP.field.items[4].text);
-                    trep.defrep.scal.setDcml(DEFREP.field.items[5].text);
-                    trep.defrep.long.setDcml(DEFREP.field.items[6].text);
-                    if (DEFREP.field.items[7].zwitch == true) trep.defrep.hs =true else trep.defrep.hs = false;
+                    trep.defrep.refname.setZfld(PDEFREP.field.items[0].text);
+                    trep.defrep.text.setZfld(PDEFREP.field.items[1].text);
+                    trep.defrep.mnmo.setZfld(PDEFREP.field.items[2].text);
+                    trep.defrep.type.setZfld(PDEFREP.field.items[3].text);
+                    trep.defrep.width.setDcml(PDEFREP.field.items[4].text);
+                    trep.defrep.scal.setDcml(PDEFREP.field.items[5].text);
+                    trep.defrep.long.setDcml(PDEFREP.field.items[6].text);
+                    if (PDEFREP.field.items[7].zwitch == true) trep.defrep.hs =true else trep.defrep.hs = false;
 
 
-                    if( ! trep.update(dbrw)) pnl.msgErr(DEFREP, "enregistrement inconnu")
-                    else pnl.msgErr(DEFREP, "enregistrement mis à jour");
-                    fld.clearAll(DEFREP);
-                    pnl.printPanel(DEFREP);
+                    if( ! trep.update(dbrw)) pnl.msgErr(PDEFREP, "enregistrement inconnu")
+                    else pnl.msgErr(PDEFREP, "enregistrement mis à jour");
+                    fld.clearAll(PDEFREP);
+                    _= Grepertoire(PDEFREP,.pageUp);
+                    PDEFREP.idxfld =0;
+                    pnl.printPanel(PDEFREP);
+
                 }
             },
             //F12 "Return"
             .F12 => {},
             //F23 "Delette"
             .F23 => {
-                trep.defrep.refname.setZfld(DEFREP.field.items[0].text);
-                if( ! trep.delete(dbrw, trep.defrep.refname.string() )) pnl.msgErr(DEFREP, "enregistrement inconnu")
-                else pnl.msgErr(DEFREP, "enregistrement supprimer²");
-                fld.clearAll(DEFREP);
-                pnl.printPanel(DEFREP);
+                trep.defrep.refname.setZfld(PDEFREP.field.items[0].text);
+                if( ! trep.delete(dbrw, trep.defrep.refname.string() )) pnl.msgErr(PDEFREP, "enregistrement inconnu")
+                else pnl.msgErr(PDEFREP, "enregistrement supprimer²");
+                fld.clearAll(PDEFREP);
+                pnl.printPanel(PDEFREP);
                 
             },
+			//pageUp ""
+			.pageUp  => {
+			    _= Grepertoire(PDEFREP,.pageUp) ;
+			},
+			//pageDown ""
+			.pageDown  => {
+			    _= Grepertoire(PDEFREP,.pageDown) ;
+			},
             else => {},
         }
 
@@ -595,82 +759,81 @@ fn pnl_DEFREP() term.Keyboard {
     }
     return Tkey;
 }
+
+fn pnl_PQUERY() term.Keyboard {
+
 //----------------------------------
-//  run Function ex: SFLD
+//  run Function ex: PANEL
 //----------------------------------
-fn Grepertoir(vpnl: *pnl.PANEL) bool {
-    const SFLDX: *grd.GRID = grd.newGridC(
-        "Grept",
-        6,
-        2,
-        30,
-        grd.gridStyle,
-        grd.CADRE.line1,
-    );
+// defines the receiving structure of the keyboard
+var Tkey : term.Keyboard = undefined ;
 
-    if (grd.countColumns(SFLDX) == 0) {
-        grd.newCell(SFLDX, "REFNAME", 25, grd.REFTYP.TEXT_FREE, term.ForegroundColor.fgYellow);
-        grd.newCell(SFLDX, "TEXT", 50, grd.REFTYP.TEXT_FREE, term.ForegroundColor.fgGreen);
-        grd.newCell(SFLDX, "MNEMO", 6, grd.REFTYP.TEXT_FREE, term.ForegroundColor.fgYellow);
-        grd.newCell(SFLDX, "T", 1, grd.REFTYP.TEXT_FREE, term.ForegroundColor.fgRed);
-        grd.newCell(SFLDX, "WIGTH", 5, grd.REFTYP.UDIGIT, term.ForegroundColor.fgMagenta);
-        grd.newCell(SFLDX, "SCAL", 4, grd.REFTYP.UDIGIT, term.ForegroundColor.fgMagenta);
-        grd.newCell(SFLDX, "LONG", 4, grd.REFTYP.UDIGIT, term.ForegroundColor.fgCyan);
-        grd.newCell(SFLDX, "Hs", 1, grd.REFTYP.SWITCH, term.ForegroundColor.fgRed);
-    }
-    grd.setHeaders(SFLDX);
-
-    // data
-    grd.resetRows(SFLDX);
-
-    trep.pgDown(dbr, trep.defrep.refname.string(), 30);
-    for (trep.rows.items, 0..) |_, n| {
-    grd.addRows(SFLDX, &.{trep.rows.items[n].refname.string(),
-        trep.rows.items[n].text.string(), trep.rows.items[n].mnmo.string(),
-        trep.rows.items[n].type.string(), trep.rows.items[n].width.string(), trep.rows.items[n].scal.string(),
-        trep.rows.items[n].long.string(), sql3.zbool(trep.rows.items[n].hs) });
-    }
-
-    // Interrogation
-    var Gkey: grd.GridSelect = undefined;
-    defer Gkey.Buf.deinit(mem.allocTui);
+    var ok : bool = false;
+    pnl.clearPanel(PQUERY);
 
     while (true) {
-        Gkey = grd.ioGrid(SFLDX, true);
-        pnl.rstPanel(grd.GRID, SFLDX, vpnl);
+        Tkey.Key = pnl.ioPanel(PQUERY);
 
-        if (Gkey.Key == kbd.esc) return false;
-        if (Gkey.Key == kbd.enter) {
-            trep.lgqQUERY(dbr,"refname",Gkey.Buf.items[0]);
-            return true;
-        }
-        if (Gkey.Key == kbd.pageDown) {
-            grd.resetRows(SFLDX);
-            trep.pgDown(dbr, trep.defrep.refname.string(), 30);
-            for (trep.rows.items, 0..) |_, n| {
-            grd.addRows(SFLDX, &.{trep.rows.items[n].refname.string(),
-                trep.rows.items[n].text.string(), trep.rows.items[n].mnmo.string(),
-                trep.rows.items[n].type.string(), trep.rows.items[n].width.string(), trep.rows.items[n].scal.string(),
-                trep.rows.items[n].long.string(), sql3.zbool(trep.rows.items[n].hs) });
-            }
-        }
-        if (Gkey.Key == kbd.pageUp) {
-            grd.resetRows(SFLDX);
-            trep.pgUp(dbr, trep.rows.items[0].refname.string(), 30);
-            for (trep.rows.items, 0..) |_, n| {
-            grd.addRows(SFLDX, &.{trep.rows.items[n].refname.string(),
-                trep.rows.items[n].text.string(), trep.rows.items[n].mnmo.string(),
-                trep.rows.items[n].type.string(), trep.rows.items[n].width.string(), trep.rows.items[n].scal.string(),
-                trep.rows.items[n].long.string(), sql3.zbool(trep.rows.items[n].hs) });
-            }
-        }
-    }
+    	//--- ---
+
+    	switch (Tkey.Key) {
+        	.func => {
+        	callFunc = FuncEnum.searchFn(PQUERY.field.items[PQUERY.idxfld].procfunc);
+        	callFunc.run(PQUERY, &PQUERY.field.items[PQUERY.idxfld]);
+        	},
+
+        	// call proc contrôl chek value
+        	.task => {
+        	callTask = TaskEnum.searchFn(PQUERY.field.items[PQUERY.idxfld].proctask);
+        	callTask.run(PQUERY, &PQUERY.field.items[PQUERY.idxfld]);
+        	},
+
+
+        	//----------------------
+        	//F1 "Help"
+        	.F1  => {
+        	},
+        	//F12 "Return"
+        	.F12  => {
+        	    pnl.rstPanel(pnl.PANEL,PQUERY,PDEFREP);
+             //    Tkey.Key = kbd.esc;
+        	    // return Tkey;
+        	},
+        	//ctrlV "ctrlV"
+        	.ctrlV  => {
+                pnl.rstPanel(pnl.PANEL,PQUERY,PDEFREP);
+        	    ok = Grepertoire(PDEFREP,.ctrlV) ;
+        	    if (ok) {
+                    fld.setText(PDEFREP,0,trep.defrep.refname.string()) catch |err| {dsperr.errorForms(PDEFREP,err);};
+                    fld.setText(PDEFREP,1,trep.defrep.text.string()) catch |err| {dsperr.errorForms(PDEFREP,err);};
+                    fld.setText(PDEFREP,2,trep.defrep.mnmo.string()) catch |err| {dsperr.errorForms(PDEFREP,err);};
+                    fld.setText(PDEFREP,3,trep.defrep.type.string()) catch |err| {dsperr.errorForms(PDEFREP,err);};
+                    fld.setText(PDEFREP,4,trep.defrep.width.strUInt()) catch |err| {dsperr.errorForms(PDEFREP,err);};
+                    fld.setText(PDEFREP,5,trep.defrep.scal.strUInt()) catch |err| {dsperr.errorForms(PDEFREP,err);};
+                    fld.setText(PDEFREP,6,trep.defrep.long.strUInt()) catch |err| {dsperr.errorForms(PDEFREP,err);};
+                    fld.setSwitch(PDEFREP,7,trep.defrep.hs) catch |err| {dsperr.errorForms(PDEFREP,err);};
+                    PDEFREP.idxfld =0;
+                    pnl.printPanel(PDEFREP);
+                }
+
+                return Tkey;
+        	},
+        	else => {},
+
+    	}
+
+		if (Tkey.Key == kbd.F3) break; // end work
+		if (Tkey.Key == kbd.F12) break; // end work
+	}
+
+	return  Tkey;
 }
 
 //----------------------------------
 //  run Function ex: SFLD
 //----------------------------------
-fn GrepQUERY(vpnl: *pnl.PANEL) bool {
+fn Grepertoire(vpnl: *pnl.PANEL, vkbd: term.kbd) bool {
+    _= vpnl;
     const SFLDX: *grd.GRID = grd.newGridC(
         "Grept",
         6,
@@ -695,7 +858,12 @@ fn GrepQUERY(vpnl: *pnl.PANEL) bool {
     // data
     grd.resetRows(SFLDX);
 
-    trep.pgDown(dbr, trep.defrep.refname.string(), 30);
+    if (vkbd == kbd.F7) trep.defrep.refname.setZfld(PDEFREP.field.items[0].text);
+    if (vkbd == kbd.ctrlV){
+        trep.lgqQUERY(dbr, PQUERY.field.items[0].text, PQUERY.field.items[1].text); // full
+    }
+    else trep.pgDown(dbr, trep.defrep.refname.string(), 30);
+    
     for (trep.rows.items, 0..) |_, n| {
     grd.addRows(SFLDX, &.{trep.rows.items[n].refname.string(),
         trep.rows.items[n].text.string(), trep.rows.items[n].mnmo.string(),
@@ -708,8 +876,10 @@ fn GrepQUERY(vpnl: *pnl.PANEL) bool {
     defer Gkey.Buf.deinit(mem.allocTui);
 
     while (true) {
-        Gkey = grd.ioGrid(SFLDX, true);
-        pnl.rstPanel(grd.GRID, SFLDX, vpnl);
+        if (vkbd == kbd.ctrlV)  Gkey = grd.ioGrid(SFLDX, false)
+        else Gkey = grd.ioGrid(SFLDX, true);
+
+        // pnl.rstPanel(grd.GRID, SFLDX, vpnl);
 
         if (Gkey.Key == kbd.esc) return false;
         if (Gkey.Key == kbd.enter) {
