@@ -24,8 +24,9 @@ Ps: it's not finished yet, the SQL module has yet to be inserted, and the intera
 
 → 2025-09-03 21:45 : fn  define Pragma   /  fn jrnlog (begin commit rollback)  ex: Test.zig  
   
-→ 2025-09-27 04:10 :  Many tests, first library (librep) contains the structure and definition of the database principle. <BR/>
-Still in development phase in collaboration with designer ZTERM. <BR/>
+→ 2025-09-27 04:10 :  Many tests, first library (librep) contains the structure and definition of the database principle. <BR/><BR/>
 
- <BR/>
+Still in development phase in collaboration with designer ZTERM. <BR/>
+→ 2025-11-05 17:15 : update module Zdate and Zsql
+<BR/>
 
