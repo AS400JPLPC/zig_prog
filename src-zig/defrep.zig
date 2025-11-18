@@ -100,7 +100,7 @@ fn Perror(errmsg: []const u8) void {
 
 pub fn Panel_DEFREP() *pnl.PANEL {
     //----------------------
-    var Panel: *pnl.PANEL = pnl.newPanelC("DEFREP", 1, 1, 44, 132, cdr.line1, "Def.REPERTOIRE");
+    var Panel: *pnl.PANEL = pnl.newPanelC("DEFREP", 1, 1, 44,132, cdr.line1, "Def.REPERTOIRE");
 
     //----------------------
     Panel.button.append(mem.allocTui, btn.newButton(kbd.F1, true, false, "Help")) catch unreachable;
@@ -221,7 +221,7 @@ pub fn Panel_PQUERY() *pnl.PANEL{
 			"Zone obligatoire",
 			"recherhe valeur",
 			"")) catch unreachable ;
-			fld.setTask(Panel,fld.getIndex(Panel,"ztext") catch unreachable,"Tctlztext") catch unreachable ; 
+			fld.setTask(Panel,fld.getIndex(Panel,"ztext") catch unreachable,"Tctlztext") catch unreachable ;
 
 
 			return Panel;
@@ -435,7 +435,7 @@ fn TctrlScal(vpnl: *pnl.PANEL, vfld: *fld.FIELD) void {
         return;
     }
 
-        
+
     if (std.mem.eql(u8, vfld.text, "")) {
         term.gotoXY(vpnl.posx + vfld.posx - 1, vpnl.posy + vfld.posy - 1);
         term.writeStyled(vfld.text, pnl.FldErr);
@@ -446,7 +446,7 @@ fn TctrlScal(vpnl: *pnl.PANEL, vfld: *fld.FIELD) void {
         fld.displayField(vpnl, vpnl.field.items[vpnl.idxfld]);
         return;
     }
-    
+
     var width: u64 = 0;
     var scal: u64 = 0;
     const xx = fld.getText(vpnl, fld.getIndex(vpnl, "WIDTH") catch unreachable) catch unreachable;
@@ -460,7 +460,7 @@ fn TctrlScal(vpnl: *pnl.PANEL, vfld: *fld.FIELD) void {
         vpnl.keyField = kbd.task;
         check = true;
     }
-    
+
     fld.printField(vpnl, vpnl.field.items[vpnl.idxfld]);
     fld.displayField(vpnl, vpnl.field.items[vpnl.idxfld]);
 }
@@ -570,7 +570,7 @@ pub fn main() !void {
 
     // init Panel
     PQUERY = Panel_PQUERY();
-    
+
     // Initialisation
     term.resizeTerm(PDEFREP.lines, PDEFREP.cols);
 
@@ -589,7 +589,7 @@ pub fn main() !void {
             ,.{s.file, s.line, s.column,s.fn_name,err})
                 catch unreachable
             );
-        };        
+        };
     defer dbr.close();
 
     dbrw = sql3.open("sqlite", "repdb.db", sql3.Mode.ReadWrite) catch |err| {
@@ -599,9 +599,9 @@ pub fn main() !void {
             ,.{s.file, s.line, s.column,s.fn_name,err})
                 catch unreachable
             );
-        };        
+        };
     defer dbrw.close();
- 
+
 
     while (npnl <= nbr_panel) {
         switch (npnl) {
@@ -654,7 +654,7 @@ fn pnl_DEFREP() term.Keyboard {
             .F4 => {
 
                 Tkey = pnl_PQUERY();
-                
+
             },
             //F7 "Display GRID"
             .F7 => {
@@ -712,7 +712,7 @@ fn pnl_DEFREP() term.Keyboard {
                 }
                 if (!check) {
                     // work update.
- 
+
                     trep.defrep.refname.setZfld(PDEFREP.field.items[0].text);
                     trep.defrep.text.setZfld(PDEFREP.field.items[1].text);
                     trep.defrep.mnmo.setZfld(PDEFREP.field.items[2].text);
@@ -738,10 +738,10 @@ fn pnl_DEFREP() term.Keyboard {
             .F23 => {
                 trep.defrep.refname.setZfld(PDEFREP.field.items[0].text);
                 if( ! trep.delete(dbrw, trep.defrep.refname.string() )) pnl.msgErr(PDEFREP, "enregistrement inconnu")
-                else pnl.msgErr(PDEFREP, "enregistrement supprimer²");
+                else pnl.msgErr(PDEFREP, "enregistrement supprimer");
                 fld.clearAll(PDEFREP);
                 pnl.printPanel(PDEFREP);
-                
+
             },
 			//pageUp ""
 			.pageUp  => {
@@ -755,7 +755,11 @@ fn pnl_DEFREP() term.Keyboard {
         }
 
         if (Tkey.Key == kbd.F3) break; // end work
-        if (Tkey.Key == kbd.F12) break; // end work
+        if (Tkey.Key == kbd.F12) {
+            fld.clearAll(PDEFREP);
+            pnl.printPanel(PDEFREP);
+            break; // end work
+         }
     }
     return Tkey;
 }
@@ -863,7 +867,7 @@ fn Grepertoire(vpnl: *pnl.PANEL, vkbd: term.kbd) bool {
         trep.lgqQUERY(dbr, PQUERY.field.items[0].text, PQUERY.field.items[1].text); // full
     }
     else trep.pgDown(dbr, trep.defrep.refname.string(), 30);
-    
+
     for (trep.rows.items, 0..) |_, n| {
     grd.addRows(SFLDX, &.{trep.rows.items[n].refname.string(),
         trep.rows.items[n].text.string(), trep.rows.items[n].mnmo.string(),
