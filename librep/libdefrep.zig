@@ -264,6 +264,7 @@ pub fn lgqQUERY(ldbr: sql3.Database, refname: []const u8, like: []const u8) void
 
 
 
+
 // logique page down
 // n = nbr rows for grid
 pub fn pgDown(ldbr: sql3.Database, kpg: []const u8, nrows: u64) void {
