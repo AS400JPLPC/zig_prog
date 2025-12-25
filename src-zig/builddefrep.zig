@@ -3,7 +3,6 @@
     ///-----------------------
 
 const std = @import("std");
-// zi=g 0.12.0 dev
 
 pub fn build(b: *std.Build) void {
     // Standard release options allow the person running `zig build` to select
@@ -20,6 +19,7 @@ pub fn build(b: *std.Build) void {
     const zenlib_rep = b.dependency("librep", .{});
 
 
+    
     // Building the executable
 
     const Prog = b.addExecutable(.{
@@ -31,6 +31,10 @@ pub fn build(b: *std.Build) void {
         }),
     });
 
+    Prog.root_module.addLibraryPath(.{.cwd_relative = "/usr/lib/"});
+    Prog.root_module.linkSystemLibrary("sqlite3",  .{ .preferred_link_mode = .dynamic } );
+
+    
     Prog.root_module.addImport("alloc",  zenlib_tui.module("alloc"));
     Prog.root_module.addImport("cursed", zenlib_tui.module("cursed"));
     Prog.root_module.addImport("utils",  zenlib_tui.module("utils"));
@@ -48,7 +52,6 @@ pub fn build(b: *std.Build) void {
     Prog.root_module.addImport("sqlite", zenlib_sql.module("sqlite"));
     Prog.root_module.addImport("defrep", zenlib_rep.module("librep"));
 
-    
     b.installArtifact(Prog);
 
 

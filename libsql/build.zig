@@ -70,10 +70,9 @@ pub fn build(b: *std.Build) void {
 
 
     sqlite_mod.addSystemIncludePath(.{ .cwd_relative ="/usr/bin/sqlite3.h"});
-    sqlite_mod.link_libc = true;
+    //sqlite_mod.link_libc = true;
     sqlite_mod.addObjectFile(.{.cwd_relative = "/usr/lib/libsqlite3.so"});
 
-    
     const libsql_mod = b.addModule("library", .{
         .root_source_file = b.path( "library.zig" ),
         .imports = &.{
