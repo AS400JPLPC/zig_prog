@@ -11,8 +11,8 @@ And compare with formSrc.zig.
 It's all very simple.
 
 Ps: it's not finished yet, the SQL module has yet to be inserted, and the interactive transactions have yet to be packaged.
-  
-  
+
+
 **---------------------------------------------------------**<BR/>
 
 → 2025-07-08 15:00 : update sqlrep  <BR/>
@@ -22,10 +22,26 @@ Ps: it's not finished yet, the SQL module has yet to be inserted, and the intera
 → 2025-08-29 00:25 : fn existRows / fn delete / SQL outsourcing definition /  SQLite modeling sql
  LIKE <BR/>
 
-→ 2025-09-03 21:45 : fn  define Pragma   /  fn jrnlog (begin commit rollback)  ex: Test.zig  
-  
+→ 2025-09-03 21:45 : fn  define Pragma   /  fn jrnlog (begin commit rollback)  ex: Test.zig
+
 → 2025-09-27 04:10 :  Many tests, first library (librep) contains the structure and definition of the database principle. <BR/><BR/>
+
+<BR/>
+→ 2025-12-21 02:15 : update function rstPanel.  <BR/>
+<BR/>
+<BR/>
+→ 2025-12-21 02:15 : update decimal  function editcode.  <BR/>
+<BR/>
 
 Still in development phase in collaboration with designer ZTERM. <BR/>
 → 2025-11-05 17:15 : update module Zdate and Zsql
 <BR/>
+
+
+<BR/>
+→ 2025-12-25 07:31 : Update, important with an example (defrep) of porting a binary to a machine of the same type 
+<BR/>
+
+<BR/>
+→ 2026-01-21 02:45 :** update for 0.15.2  regression**  <BR/>
+
